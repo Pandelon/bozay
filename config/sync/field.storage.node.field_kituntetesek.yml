@@ -1,0 +1,21 @@
+uuid: 750a441b-c816-4ca3-b1ac-28d0b4ed0030
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_kituntetesek
+field_name: field_kituntetesek
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

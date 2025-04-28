@@ -1,0 +1,10 @@
+uuid: 52095068-3cb7-4991-ba76-fc34aa10668b
+langcode: hu
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: Z7KuCUwM_WdTNvLcoltuX3_8d-s-8FZkTN6KgNwF0eM
+id: html_month
+label: 'HTML hónap'
+locked: true
+pattern: Y-m

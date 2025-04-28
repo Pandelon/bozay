@@ -1,0 +1,20 @@
+uuid: 4873b886-a4eb-4769-8e9e-194a8b842aa7
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - bozay
+_core:
+  default_config_hash: 13GQpeITIJsp1kyPniXtWZfyFH87vb1xxJCHifL4UeE
+id: bozay_local_actions
+theme: bozay
+region: content
+weight: -4
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Elsődleges adminisztrátori műveletek'
+  label_display: '0'
+  provider: core
+visibility: {  }

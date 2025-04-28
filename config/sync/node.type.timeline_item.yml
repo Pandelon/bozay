@@ -1,0 +1,18 @@
+uuid: 98720741-b3b9-4326-a961-82edf38fb640
+langcode: hu
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Timeline item'
+type: timeline_item
+description: ''
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

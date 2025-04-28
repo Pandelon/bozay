@@ -1,0 +1,20 @@
+uuid: aa9ad72c-534f-4549-a111-2adf49c63038
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.genre
+  module:
+    - path
+id: taxonomy_term.genre.path
+field_name: path
+entity_type: taxonomy_term
+bundle: genre
+label: Webcímálnév
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

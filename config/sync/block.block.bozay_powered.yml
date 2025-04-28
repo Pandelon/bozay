@@ -1,0 +1,22 @@
+uuid: 35d79e4a-bb15-44af-b3f9-f25f00f13246
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bozay
+_core:
+  default_config_hash: jQQUUWN2Uxr5qZtc9zcJKBCxpKY8orN1u2HPqYYRQDI
+id: bozay_powered
+theme: bozay
+region: footer
+weight: -8
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Drupal működteti'
+  label_display: '0'
+  provider: system
+visibility: {  }

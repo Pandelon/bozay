@@ -1,0 +1,65 @@
+.navbar-brand a.site-title,
+.navbar-brand  .site-slogan {
+  color: #fff;
+  &:hover {
+    color: #fff;
+  }
+}
+
+.navbar-brand a.site-title {
+  font-size: 2rem;
+}
+
+.field--name-field-gallaery-pic {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+
+.block-language li.is-active {
+  display: none;
+}
+.hu .language-link {
+  display:block;
+  width: 30px;
+  height: 30px;
+  text-indent: -9999em;
+  background: url("../img/flag-hu.png");
+  background-size: cover;
+  border-radius: 100%;
+
+}
+.en a.language-link {
+  display:block;
+  width: 30px;
+  height: 30px;
+  text-indent: -9999px;
+  background: url("../img/flag-en.png") center no-repeat;
+  background-size: cover;
+  border-radius: 100%;
+}
+
+.search-block-form {
+  line-height: 1;
+}
+
+
+.form-control {
+  height: calc(1em + 0.75rem + 2px);
+  border-radius: 0px;
+}
+
+
+.btn-primary {
+  background-color: $boz-2;
+  border-color: $boz-2;
+  border-radius: 0px;
+  height: calc(1em + 0.75rem + 2px);
+  line-height: 1em;
+
+  &:hover {
+    background-color: $boz-2;
+    border-color: $boz-2;
+  }
+}

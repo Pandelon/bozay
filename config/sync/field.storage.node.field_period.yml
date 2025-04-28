@@ -1,0 +1,20 @@
+uuid: 69c29fa2-f340-4b2b-bb2b-6d47544b238e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_period
+field_name: field_period
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

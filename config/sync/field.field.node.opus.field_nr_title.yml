@@ -1,0 +1,23 @@
+uuid: e7d26c4b-c329-4acd-911c-b6406df9a153
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_nr_title
+    - node.type.opus
+id: node.opus.field_nr_title
+field_name: field_nr_title
+entity_type: node
+bundle: opus
+label: Tételszám
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,19 @@
+uuid: 840a036b-d19b-48ae-9d94-ad2c5d212977
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_timeline_date
+    - node.type.timeline_item
+id: node.timeline_item.field_timeline_date
+field_name: field_timeline_date
+entity_type: node
+bundle: timeline_item
+label: Dátum
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

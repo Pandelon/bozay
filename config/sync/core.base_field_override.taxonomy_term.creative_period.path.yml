@@ -1,0 +1,20 @@
+uuid: 4ca605b3-9fb4-4cff-9fd4-c79dbc49bd40
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.creative_period
+  module:
+    - path
+id: taxonomy_term.creative_period.path
+field_name: path
+entity_type: taxonomy_term
+bundle: creative_period
+label: Webcímálnév
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

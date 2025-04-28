@@ -1,0 +1,18 @@
+uuid: ca9bf10b-0420-4022-868c-54dc91bc6013
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.orchestration
+id: taxonomy_term.orchestration.name
+field_name: name
+entity_type: taxonomy_term
+bundle: orchestration
+label: Név
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

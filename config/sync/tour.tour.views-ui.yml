@@ -1,0 +1,88 @@
+uuid: b62d3c71-2e6f-4fe4-b261-640c59dca207
+langcode: hu
+status: true
+dependencies:
+  module:
+    - views_ui
+_core:
+  default_config_hash: SQMiFkCe2dvWXIB-mlAPqsM6ofosgIHWWGLF5N201Jw
+id: views-ui
+label: 'Nézet szerkesztési oldal'
+module: views_ui
+routes:
+  -
+    route_name: entity.view.edit_form
+  -
+    route_name: entity.view.edit_display_form
+tips:
+  views-main:
+    id: views-main
+    plugin: text
+    label: 'Nézetbeállítások kezelése.'
+    weight: 1
+    body: 'Beállítások áttekintése vagy szerkesztése.'
+  views-ui-displays:
+    id: views-ui-displays
+    plugin: text
+    label: 'Megjelenítések ebben a nézetben'
+    weight: 2
+    selector: '#views-display-top'
+    body: 'A megjelenítés az eredmények kiírásának egy módja, pl. oldal vagy blokk. Egy nézet több megjelenítést tartalmazhat, amik itt vannak felsorolva. Az aktív megjelenítés kiemelve látható.'
+  views-ui-view-admin:
+    id: views-ui-view-admin
+    plugin: text
+    label: 'Nézet adminisztráció'
+    weight: 3
+    position: right
+    selector: '#views-display-extra-actions'
+    body: 'Olyan adminisztrációs feladatok végrehajtása mint például leírás hozzáadása a nézethez, vagy annak leklónozása. A legnyíló gombra kattintva lehet megnézni a rendelkezésre álló lehetőségeket.'
+  views-ui-format:
+    id: views-ui-format
+    plugin: text
+    label: 'Kimenet formája'
+    weight: 4
+    selector: .views-ui-display-tab-bucket.format
+    body: 'Kiválasztható az eredmények kiírási módja. Pl. a <em>Tartalom</em> lehetőség kiválasztásával minden elem teljesen kiíratható a megadott megjelenítési beállításokkal. A <em>Mezők</em> lehetőség kiválasztásával minden eredményhez csak bizonyos mezők lesznek kiírva. További formátumok is felvehetők a Drupal alapfunkcióinak modulok telepítésével történő <em>bővítésével</em>.'
+  views-ui-fields:
+    id: views-ui-fields
+    plugin: text
+    label: Mezők
+    weight: 5
+    selector: .views-ui-display-tab-bucket.field
+    body: 'Ha a nézet használ mezőket, itt kerülnek listázásra. A mezőre kattintva konfigurálható.'
+  views-ui-filter:
+    id: views-ui-filter
+    plugin: text
+    label: 'A nézet szűrése'
+    weight: 6
+    selector: .views-ui-display-tab-bucket.filter
+    body: 'Szűrők hozzáadásával szűkíthetők a kimenet eredményei. Pl. csak a <em>közzétett</em> tartalom megjelenítéséhez <em>Közzétett</em> szűrőt kell felvenni, és az <em>Igen</em> lehetőséget kell kiválasztani.'
+  views-ui-filter-operations:
+    id: views-ui-filter-operations
+    plugin: text
+    label: Szűrőműveletek
+    weight: 7
+    selector: '.views-ui-display-tab-bucket.filter .dropbutton-widget'
+    body: 'Szűrők hozzáadása, átrendezése vagy törlése.'
+  views-ui-sorts:
+    id: views-ui-sorts
+    plugin: text
+    label: 'Rendezési jellemzők'
+    weight: 8
+    selector: .views-ui-display-tab-bucket.sort
+    body: 'Az eredmények megjelenítési sorrendjének kezelése. Egy aktív sorbarendezési szabályra kattintva szerkeszthető.'
+  views-ui-sorts-operations:
+    id: views-ui-sorts-operations
+    plugin: text
+    label: 'Sorbarendezési műveletek'
+    weight: 9
+    selector: '.views-ui-display-tab-bucket.sort .dropbutton-widget'
+    body: 'Rendezési szabályok hozzáadása, átrendezése vagy eltávolítása.'
+  views-ui-preview:
+    id: views-ui-preview
+    plugin: text
+    label: Előnézet
+    weight: 10
+    position: right
+    selector: '#preview-submit'
+    body: 'Előnézet mutatása a nézet kimenetéről.'

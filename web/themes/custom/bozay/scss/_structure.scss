@@ -1,0 +1,59 @@
+.dialog-off-canvas-main-canvas {
+   // background-color: #8e2a1a;
+}
+
+
+main {
+
+  background-position: center center;
+  background-repeat: no-repeat;
+  color: #582b39;
+  padding-top: 1rem;
+  > .container {
+    background-image: url("../img/bg-ba-signo.jpg");
+    background-repeat: repeat-y;
+    background-size: contain;
+    background-position: 0 25px;
+    min-height: 650px;
+  }
+}
+header {
+  background: $boz-4;
+}
+
+.region-content {
+  //background: rgba(white,.9);
+}
+footer.mt-auto {
+  background-color: $boz-4;
+  box-shadow:
+  0 0 0 2px hsl(0, 0%, 100%),
+  0 0 0 3px hsl(341, 51%, 36%);
+}
+
+.region-nav-additional {
+  display: flex;
+}
+
+.language-switcher-language-url {
+  li {
+    list-style: none;
+  }
+}
+
+div#sliding-popup.sliding-popup-bottom {
+  background: $boz-1;
+}
+
+footer .region-footer {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+.page-node-type-opus {
+  .field__label {
+    width: 250px;
+    text-align: right;
+  }
+}

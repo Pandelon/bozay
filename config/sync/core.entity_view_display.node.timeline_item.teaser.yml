@@ -1,0 +1,33 @@
+uuid: 08ebe7d6-48d0-48f5-9b93-25505c9922e1
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.timeline_item.field_eletrajzi_esemenyek
+    - field.field.node.timeline_item.field_fontosabb_muvek_keletkezes
+    - field.field.node.timeline_item.field_kituntetesek
+    - field.field.node.timeline_item.field_munkahely
+    - field.field.node.timeline_item.field_periodus
+    - field.field.node.timeline_item.field_timeline_date
+    - node.type.timeline_item
+  module:
+    - user
+id: node.timeline_item.teaser
+targetEntityType: node
+bundle: timeline_item
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_eletrajzi_esemenyek: true
+  field_fontosabb_muvek_keletkezes: true
+  field_kituntetesek: true
+  field_munkahely: true
+  field_periodus: true
+  field_timeline_date: true
+  langcode: true

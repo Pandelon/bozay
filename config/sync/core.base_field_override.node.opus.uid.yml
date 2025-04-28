@@ -1,0 +1,20 @@
+uuid: 703b8729-897d-4ec1-9a9a-a10b8ff3b6aa
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.uid
+field_name: uid
+entity_type: node
+bundle: opus
+label: Szerző
+description: 'A tartalom szerzőjének felhasználóneve.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: 'Drupal\node\Entity\Node::getDefaultEntityOwner'
+settings:
+  handler: default
+  handler_settings: {  }
+field_type: entity_reference

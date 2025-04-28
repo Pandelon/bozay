@@ -1,0 +1,18 @@
+uuid: dbe9d3eb-d126-4a21-beca-201499d8a4a5
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.genre
+id: taxonomy_term.genre.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: genre
+label: Módosítva
+description: 'Az időpont, mikor a kifejezést utoljára szerkesztették.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

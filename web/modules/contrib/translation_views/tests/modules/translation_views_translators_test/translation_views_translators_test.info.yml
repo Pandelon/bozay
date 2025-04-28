@@ -1,0 +1,18 @@
+name: 'Translation views Translators integration test'
+type: module
+description: ''
+package: Testing
+core_version_requirement: ^8.8 || ^9 || ^10
+dependencies:
+  - drupal:node
+  - drupal:views
+  - drupal:translation_views
+  - drupal:content_translation
+  - drupal:language
+  - translators:translators
+  - translators:translators_content
+
+# Information added by Drupal.org packaging script on 2023-03-24
+version: '8.x-1.0-alpha11'
+project: 'translation_views'
+datestamp: 1679660670

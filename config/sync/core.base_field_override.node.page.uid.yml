@@ -1,0 +1,20 @@
+uuid: 072057cb-3dee-444c-9642-526430d2f4ac
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.uid
+field_name: uid
+entity_type: node
+bundle: page
+label: Szerző
+description: 'A tartalom szerzőjének felhasználóneve.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: 'Drupal\node\Entity\Node::getDefaultEntityOwner'
+settings:
+  handler: default
+  handler_settings: {  }
+field_type: entity_reference

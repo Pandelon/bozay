@@ -1,0 +1,24 @@
+uuid: 1ced2e5e-d0ca-49ec-86f6-696932c1b534
+langcode: hu
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomies
+label: Taxonomies
+type: 'canonical_entities:taxonomy_term'
+pattern: '[term:vocabulary]/[term:name]'
+selection_criteria:
+  85ed694a-47a6-430f-99ff-5e8523384612:
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: 85ed694a-47a6-430f-99ff-5e8523384612
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    bundles:
+      creative_period: creative_period
+      genre: genre
+      orchestration: orchestration
+selection_logic: and
+weight: -5
+relationships: {  }

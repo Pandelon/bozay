@@ -1,0 +1,29 @@
+uuid: 4638b67b-21bb-46b3-bc1e-c76d07680e9c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_periodus
+    - node.type.timeline_item
+    - taxonomy.vocabulary.creative_period
+id: node.timeline_item.field_periodus
+field_name: field_periodus
+entity_type: node
+bundle: timeline_item
+label: periodus
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      creative_period: creative_period
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

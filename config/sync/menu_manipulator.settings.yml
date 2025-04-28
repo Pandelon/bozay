@@ -1,0 +1,19 @@
+_core:
+  default_config_hash: O9j53QW4KPrwJ5IDeauoNUo0tC1GbMzYqm_ano0eIqI
+preprocess_menus_language: 1
+preprocess_menus_language_use_entity: 1
+preprocess_menus_language_list:
+  footer: footer
+  main: main
+  account: 0
+  admin: 0
+  tools: 0
+preprocess_menus_icon: 0
+preprocess_menus_icon_list:
+  account: 0
+  admin: 0
+  footer: 0
+  main: 0
+  tools: 0
+langcode: hu
+menu_link_icon_list: ''

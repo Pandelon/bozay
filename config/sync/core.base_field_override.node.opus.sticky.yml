@@ -1,0 +1,22 @@
+uuid: d992dbc3-f713-459f-999a-8bc3f680e0da
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.sticky
+field_name: sticky
+entity_type: node
+bundle: opus
+label: 'Kiemelt, az oldal tetejére'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

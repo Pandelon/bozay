@@ -1,0 +1,23 @@
+uuid: 6ab56276-0b26-40f8-a347-be1ca623d587
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_listen
+    - node.type.opus
+  module:
+    - link
+id: node.opus.field_listen
+field_name: field_listen
+entity_type: node
+bundle: opus
+label: Zenehallgatás
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

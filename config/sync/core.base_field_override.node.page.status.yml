@@ -1,0 +1,22 @@
+uuid: 2685df6c-cb32-4e45-a43f-e03710a7eab1
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.status
+field_name: status
+entity_type: node
+bundle: page
+label: Közzétéve
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

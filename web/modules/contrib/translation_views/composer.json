@@ -1,0 +1,13 @@
+{
+  "name": "drupal/translation_views",
+  "description": "Create customized lists and queries of translations from your database.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/translation_views",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "drupal/core": "^8.8 || ^9 || ^10"
+  },
+  "require-dev": {
+    "drupal/translators_content": "^1.0@alpha"
+  }
+}

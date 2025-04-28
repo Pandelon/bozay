@@ -1,0 +1,18 @@
+uuid: b96d6f99-baf4-4f15-8e09-792dd767c2b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.timeline_item
+id: node.timeline_item.changed
+field_name: changed
+entity_type: node
+bundle: timeline_item
+label: Changed
+description: 'The time that the node was last edited.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

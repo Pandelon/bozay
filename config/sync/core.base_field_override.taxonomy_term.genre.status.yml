@@ -1,0 +1,22 @@
+uuid: 06cb91b2-3593-4fab-8af1-ea989d235127
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.genre
+id: taxonomy_term.genre.status
+field_name: status
+entity_type: taxonomy_term
+bundle: genre
+label: Közzétéve
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

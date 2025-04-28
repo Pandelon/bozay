@@ -1,0 +1,22 @@
+uuid: 73d6c68f-c2ef-4c7e-8b46-84312c795f46
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: mu
+label: Mű
+type: 'canonical_entities:node'
+pattern: 'mu/[node:title]'
+selection_criteria:
+  aabad7e6-025f-42b5-a3e4-83252e85e0df:
+    id: node_type
+    negate: false
+    uuid: aabad7e6-025f-42b5-a3e4-83252e85e0df
+    context_mapping:
+      node: node
+    bundles:
+      opus: opus
+selection_logic: and
+weight: -5
+relationships: {  }

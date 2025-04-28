@@ -1,0 +1,112 @@
+uuid: 69a36970-47b2-49ca-9abf-ace3c8a833bf
+langcode: hu
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.restricted_html
+    - node.type.gallery
+    - node.type.opus
+    - node.type.page
+    - node.type.timeline_item
+    - taxonomy.vocabulary.category
+    - taxonomy.vocabulary.creative_period
+    - taxonomy.vocabulary.genre
+    - taxonomy.vocabulary.orchestration
+  module:
+    - admin_toolbar_search
+    - block
+    - content_translation
+    - contextual
+    - eu_cookie_compliance
+    - filter
+    - imce
+    - menu_link_content
+    - node
+    - path
+    - quickedit
+    - system
+    - taxonomy
+    - toolbar
+id: editor
+label: editor
+weight: 3
+is_admin: null
+permissions:
+  - 'access content'
+  - 'access content overview'
+  - 'access contextual links'
+  - 'access in-place editing'
+  - 'access taxonomy overview'
+  - 'access toolbar'
+  - 'administer blocks'
+  - 'administer imce'
+  - 'administer menu'
+  - 'administer nodes'
+  - 'administer site configuration'
+  - 'administer taxonomy'
+  - 'create content translations'
+  - 'create gallery content'
+  - 'create opus content'
+  - 'create page content'
+  - 'create terms in category'
+  - 'create terms in creative_period'
+  - 'create terms in genre'
+  - 'create terms in orchestration'
+  - 'create timeline_item content'
+  - 'create url aliases'
+  - 'delete any gallery content'
+  - 'delete any opus content'
+  - 'delete any page content'
+  - 'delete any timeline_item content'
+  - 'delete gallery revisions'
+  - 'delete opus revisions'
+  - 'delete own gallery content'
+  - 'delete own opus content'
+  - 'delete own page content'
+  - 'delete own timeline_item content'
+  - 'delete page revisions'
+  - 'delete terms in category'
+  - 'delete terms in creative_period'
+  - 'delete terms in genre'
+  - 'delete terms in orchestration'
+  - 'delete timeline_item revisions'
+  - 'display eu cookie compliance popup'
+  - 'edit any gallery content'
+  - 'edit any opus content'
+  - 'edit any page content'
+  - 'edit any timeline_item content'
+  - 'edit own gallery content'
+  - 'edit own opus content'
+  - 'edit own page content'
+  - 'edit own timeline_item content'
+  - 'edit terms in category'
+  - 'edit terms in creative_period'
+  - 'edit terms in genre'
+  - 'edit terms in orchestration'
+  - 'revert gallery revisions'
+  - 'revert opus revisions'
+  - 'revert page revisions'
+  - 'revert timeline_item revisions'
+  - 'translate any entity'
+  - 'translate category taxonomy_term'
+  - 'translate creative_period taxonomy_term'
+  - 'translate gallery node'
+  - 'translate genre taxonomy_term'
+  - 'translate menu_link_content'
+  - 'translate opus node'
+  - 'translate orchestration taxonomy_term'
+  - 'translate page node'
+  - 'translate timeline_item node'
+  - 'use admin toolbar search'
+  - 'use text format basic_html'
+  - 'use text format full_html'
+  - 'use text format restricted_html'
+  - 'view all revisions'
+  - 'view gallery revisions'
+  - 'view opus revisions'
+  - 'view own unpublished content'
+  - 'view page revisions'
+  - 'view the administration theme'
+  - 'view timeline_item revisions'

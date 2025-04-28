@@ -1,0 +1,20 @@
+uuid: f27e0cd8-f99c-4cdd-81bb-1f4426e3b286
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.menu_link
+field_name: menu_link
+entity_type: node
+bundle: page
+label: Menühivatkozás
+description: 'Számított menühivatkozás a tartalomra (csak a tartalom mentésekor elérhető).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: default
+  handler_settings: {  }
+field_type: entity_reference

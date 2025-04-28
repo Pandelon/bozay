@@ -1,0 +1,20 @@
+uuid: 1fd5c3b7-84de-4038-b4ac-8047417887f4
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.orchestration
+  module:
+    - text
+id: taxonomy_term.orchestration.description
+field_name: description
+entity_type: taxonomy_term
+bundle: orchestration
+label: Leírás
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

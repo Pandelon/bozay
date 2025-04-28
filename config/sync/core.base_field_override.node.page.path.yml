@@ -1,0 +1,20 @@
+uuid: 35aa8845-5814-437f-bbd1-b5ae9c35eb65
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+  module:
+    - path
+id: node.page.path
+field_name: path
+entity_type: node
+bundle: page
+label: Webcímálnév
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

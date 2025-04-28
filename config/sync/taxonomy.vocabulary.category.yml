@@ -1,0 +1,8 @@
+uuid: 2c8c9052-b23d-4d93-bd21-407b14d67ca5
+langcode: en
+status: true
+dependencies: {  }
+name: 'Előadói apparátus'
+vid: category
+description: ''
+weight: 0

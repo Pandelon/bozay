@@ -1,0 +1,11 @@
+name: Body node ID Class
+type: module
+description: 'Adds a node ID and type class to the <body> tag'
+package: Other
+core: 8.x
+core_version_requirement: ^8 || ^9 || ^10 || ^11
+
+# Information added by Drupal.org packaging script on 2024-11-05
+version: '2.0.1'
+project: 'body_node_id_class'
+datestamp: 1730820680

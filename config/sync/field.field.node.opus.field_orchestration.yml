@@ -1,0 +1,29 @@
+uuid: 8f525bbe-f7d7-41a2-9ca6-f654db0e249a
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_orchestration
+    - node.type.opus
+    - taxonomy.vocabulary.orchestration
+id: node.opus.field_orchestration
+field_name: field_orchestration
+entity_type: node
+bundle: opus
+label: Hangszerelés
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      orchestration: orchestration
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

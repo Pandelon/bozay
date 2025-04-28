@@ -1,0 +1,12 @@
+display:
+  block_2:
+    display_title: 'Period 1'
+  block_1:
+    display_title: 'Juvenile period'
+  block_4:
+    display_options:
+      filters:
+        field_period_target_id:
+          expose:
+            label: aaaaaa
+label: Works

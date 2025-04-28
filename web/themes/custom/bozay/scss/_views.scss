@@ -1,0 +1,72 @@
+
+.view-timeline {
+  .table th, .table {
+    td {
+      border:none;
+   }
+  }
+
+  .table-striped tbody tr {
+    background: #fff;
+  }
+  .views-row {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+
+    .views-field {
+      padding-top:1rem;
+    }
+  }
+
+}
+.views-field-field-timeline-date {
+  background-image: linear-gradient(to right, transparent 49%, #000 49%, #000 51%, transparent 51%, transparent);
+  padding: 1rem 0;
+
+  .field-content {
+    background: #fff;
+    padding: 2px;
+    border: 1px solid #333;
+    width: fit-content;
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+.field-content {
+  text-align: center;
+}
+
+.views-field-field-kituntetesek {
+
+}
+
+.view-mujegyzek {
+
+  width: 100%;
+
+  .views-table {
+    width: 100%;
+    margin: 2rem 0;
+
+    a {
+      margin: 5px 10px;
+    }
+
+    h2 a {
+      font-size: 1rem;
+    }
+  }
+}
+
+.views-field-title {
+  width: 30%;
+}
+.views-field-field-nr {
+  width: 20%;
+}
+.views-field-field-period {
+  width: 50%;
+}
+
+

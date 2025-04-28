@@ -1,0 +1,22 @@
+uuid: 95422c6b-7aa9-400a-b584-b951ff4bd760
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_duration
+    - node.type.opus
+  module:
+    - duration_field
+id: node.opus.field_duration
+field_name: field_duration
+entity_type: node
+bundle: opus
+label: Időtartam
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  granularity: 'i:s'
+field_type: duration

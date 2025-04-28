@@ -1,0 +1,43 @@
+uuid: bb97f81d-99ed-4e48-9b2c-4ba4cd98e33f
+langcode: hu
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.opus.field_category
+    - field.field.node.opus.field_description
+    - field.field.node.opus.field_duration
+    - field.field.node.opus.field_genre
+    - field.field.node.opus.field_kotta
+    - field.field.node.opus.field_listen
+    - field.field.node.opus.field_nr
+    - field.field.node.opus.field_nr_title
+    - field.field.node.opus.field_opus_creation_date
+    - field.field.node.opus.field_orchestration
+    - field.field.node.opus.field_period
+    - node.type.opus
+  module:
+    - user
+id: node.opus.teaser
+targetEntityType: node
+bundle: opus
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_category: true
+  field_description: true
+  field_duration: true
+  field_genre: true
+  field_kotta: true
+  field_listen: true
+  field_nr: true
+  field_nr_title: true
+  field_opus_creation_date: true
+  field_orchestration: true
+  field_period: true
+  langcode: true

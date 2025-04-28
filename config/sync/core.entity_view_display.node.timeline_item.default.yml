@@ -1,0 +1,74 @@
+uuid: e5edac81-eb98-4004-9e16-edddefa816d8
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.field.node.timeline_item.field_eletrajzi_esemenyek
+    - field.field.node.timeline_item.field_fontosabb_muvek_keletkezes
+    - field.field.node.timeline_item.field_kituntetesek
+    - field.field.node.timeline_item.field_munkahely
+    - field.field.node.timeline_item.field_periodus
+    - field.field.node.timeline_item.field_timeline_date
+    - node.type.timeline_item
+  module:
+    - user
+id: node.timeline_item.default
+targetEntityType: node
+bundle: timeline_item
+mode: default
+content:
+  field_eletrajzi_esemenyek:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_fontosabb_muvek_keletkezes:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_kituntetesek:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_munkahely:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_periodus:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_timeline_date:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true

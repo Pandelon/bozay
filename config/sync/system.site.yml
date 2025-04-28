@@ -1,0 +1,14 @@
+_core:
+  default_config_hash: yTxtFqBHnEWxQswuWvkjE8mKw2t8oKuCL1q8KnfHuGE
+langcode: hu
+uuid: c28de6ed-efbe-42ec-9af0-fd4a32f65bb0
+name: 'Bozay Attila'
+mail: info@bozayattila.hu
+slogan: zeneszerző
+page:
+  403: ''
+  404: ''
+  front: /node/2
+admin_compact_mode: false
+weight_select_max: 100
+default_langcode: hu

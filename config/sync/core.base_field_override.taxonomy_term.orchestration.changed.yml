@@ -1,0 +1,18 @@
+uuid: 2b025e7d-97f6-42e3-a84d-04e6a1684019
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.orchestration
+id: taxonomy_term.orchestration.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: orchestration
+label: Módosítva
+description: 'Az időpont, mikor a kifejezést utoljára szerkesztették.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

@@ -1,0 +1,18 @@
+uuid: 0d118c0c-03e8-4bf3-9f9c-ed49d1ef0008
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.changed
+field_name: changed
+entity_type: node
+bundle: opus
+label: Módosítva
+description: 'Az időpont, mikor a tartalmat utoljára szerkesztették.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

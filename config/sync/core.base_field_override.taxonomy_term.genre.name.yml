@@ -1,0 +1,18 @@
+uuid: 69431297-c738-4d23-b09f-d6006256d40c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.genre
+id: taxonomy_term.genre.name
+field_name: name
+entity_type: taxonomy_term
+bundle: genre
+label: Név
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

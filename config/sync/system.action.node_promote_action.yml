@@ -1,0 +1,13 @@
+uuid: e715aa3d-9a2a-49f3-8d27-1a2169fed112
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: N0RDBTqiK4dKoN4p4oW2j0SGWycdHyALUe9M-Ofp89U
+id: node_promote_action
+label: 'Tartalom címlapra helyezése'
+type: node
+plugin: node_promote_action
+configuration: {  }

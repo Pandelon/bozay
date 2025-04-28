@@ -1,0 +1,22 @@
+uuid: c4e95ac0-ace6-4fe7-a1f3-61f7c2fad076
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.timeline_item
+id: node.timeline_item.sticky
+field_name: sticky
+entity_type: node
+bundle: timeline_item
+label: 'Sticky at top of lists'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

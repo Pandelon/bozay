@@ -1,0 +1,13 @@
+uuid: b266ea2e-0e93-4da9-8fff-ea1baf21ff4b
+langcode: hu
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: jonvgt3CkUM2eMLTFwWfHileWWDC4YtXCuIlCahTk_I
+id: personal
+label: 'Személyes kapcsolatfelvételi űrlap'
+recipients: {  }
+reply: ''
+weight: 0
+message: 'Az üzenet elküldve.'
+redirect: ''

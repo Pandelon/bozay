@@ -1,0 +1,19 @@
+uuid: f315a9ce-7e8e-4e91-8936-0e922f117a3c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_munkahely
+    - node.type.timeline_item
+id: node.timeline_item.field_munkahely
+field_name: field_munkahely
+entity_type: node
+bundle: timeline_item
+label: 'munkahelyek, tisztségek'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

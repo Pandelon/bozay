@@ -1,0 +1,48 @@
+uuid: fee8f013-f306-4ba3-84ab-9815989be059
+langcode: hu
+status: true
+dependencies:
+  module:
+    - language
+_core:
+  default_config_hash: htvIRulQmOueGSHBeexvOjhVnSRQeyJLzSAFk91-Wq8
+id: language-edit
+label: 'Nyelvek szerkesztése'
+module: language
+routes:
+  -
+    route_name: entity.configurable_language.edit_form
+tips:
+  language-edit-overview:
+    id: language-edit-overview
+    plugin: text
+    label: 'Nyelvek szerkesztése'
+    weight: 1
+    body: '<p>Ez az oldal lehetővé teszi a webhely egy nyelvének szerkesztését, beleértve az egyéni nyelveket is.</p>'
+  language-edit-langcode:
+    id: language-edit-langcode
+    plugin: text
+    label: Nyelvkód
+    weight: 2
+    selector: '#edit-langcode-view'
+    body: '<p>Nem módosítható a webhelyen a nyelv kódja, mivel azt a rendszer a nyelv nyomonkövetésére használja.</p>'
+  language-edit-label:
+    id: language-edit-label
+    plugin: text
+    label: 'Nyelv neve'
+    weight: 3
+    selector: '#edit-label'
+    body: '<p>A nyelv neve több helyen megjelenik a webhelyen és angolul írandó. Az <em>Interface Translation</em> modul segítségével csak a beépített nyelvek nevei, a <em>Configuration Translation</em> modullal pedig mind a beépített, mind az egyedi nyelvek nevei lefordíthatók.</p>'
+  language-edit-direction:
+    id: language-edit-direction
+    plugin: text
+    label: 'Nyelv iránya'
+    weight: 4
+    selector: '#edit-direction--wrapper--description'
+    body: '<p>Ki lehet választani, hogy a nyelv „Balról jobbra” vagy „Jobbról balra” szövegirányú.</p><p>Nem minden smink támogatja azonban a „Jobbról balra” szövegirányt, ezt a beállítás előtt érdemes ellenőrizni.</p>'
+  language-edit-continue:
+    id: language-edit-continue
+    plugin: text
+    label: Folytatás
+    weight: 5
+    body: '<p>Most, a „Nyelv szerkesztése” oldal áttekintése után a következőkkel lehet folytatni:<ul><li>Egy nyelv szerkesztése</li><li><a href="[site:url]admin/config/regional/language">Beállított nyelvek megtekintése</a></li></ul></p>'

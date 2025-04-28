@@ -1,0 +1,55 @@
+uuid: 7ed1fd24-9f61-47c6-8e4d-ee452a3b391e
+langcode: hu
+status: true
+dependencies:
+  module:
+    - language
+_core:
+  default_config_hash: Ue-WNgRxcyJowLbtW-2ZQawjlNAMVCvK7FveldbwQ_M
+id: language
+label: Language
+module: language
+routes:
+  -
+    route_name: entity.configurable_language.collection
+tips:
+  language-overview:
+    id: language-overview
+    plugin: text
+    label: Nyelvek
+    weight: 1
+    body: '<p>A „Nyelvek” oldal lehetővé teszi a webhely nyelveinek hozzáadását, szerkesztését, törlését, és átrendezését.</p>'
+  language-add:
+    id: language-add
+    plugin: text
+    label: 'Nyelvek hozzáadása'
+    weight: 2
+    selector: .button-action
+    body: '<p>További nyelveket a „Nyelv hozzáadása” gombbal lehet bekapcsolni.</p><p>Így hozzáadva megjelennek majd a nyelvek listájában, ezután szerkeszthetők és törölhetők is lesznek.</p>'
+  language-reorder:
+    id: language-reorder
+    plugin: text
+    label: 'Nyelvek újrarendezése'
+    weight: 3
+    selector: .draggable
+    body: '<p>A webhely által használt nyelvek újrarendezéséhez a mellettük levő mozgató ikonokat lehet használni.</p><p>A webhelyen listázott nyelvek – mint például az <em>Interface Translation</em> és a <em>Content Translation</em> modulok által létrehozott nyelvválasztó blokk tartalma – az alábbi lista alapján lesznek megjelenítve.</p><p>Az újrarendezés végén a „Beállítások mentése” gombra kell kattintani.</p>'
+  language-default:
+    id: language-default
+    plugin: text
+    label: 'Egy nyelv beállítása alapértelmezettként'
+    weight: 4
+    selector: .js-form-item-site-default-language
+    body: '<p>Az alapértelmezett nyelvet a webhelyen konfigurált nyelvek közül lehet kiválasztani. Erre akkor lesz szükség, amikor nincs másik nyelv megadva, pedig kötelező lenne.</p>'
+  language-operations:
+    id: language-operations
+    plugin: text
+    label: 'Nyelvek változtatása'
+    weight: 5
+    selector: .dropbutton-wrapper
+    body: '<p>A nyelvek szerkesztésével és törlésével kapcsolatos műveletek.</p><p>A nyelv neve és szövegiránya is szerkeszthető.</p><p>A törölt nyelvek a későbbiekben újra hozzáadhatók. Egy nyelv törlése a tárolt fordításokat is törölni fogja és a hozzá tartozó tartalmak is semleges nyelvűre lesznek állítva. A webhely alapértelmezett nyelve nem törölhető.</p>'
+  language-continue:
+    id: language-continue
+    plugin: text
+    label: Folytatás
+    weight: 6
+    body: '<p>Most, hogy már áttekintettük a „Nyelvek” oldalt, a következőkkel lehet folytatni: <ul><li><a href="[site:url]admin/config/regional/language/add">Egy nyelv hozzáadása</a></li><li>Nyelvek átrendezése</li><li>Egy nyelv szerkesztése</li><li>Egy nyelv törlése</li></ul></p>'

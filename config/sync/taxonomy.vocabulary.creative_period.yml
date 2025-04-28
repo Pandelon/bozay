@@ -1,0 +1,8 @@
+uuid: 320e0c26-8d64-4bea-9b97-72cb8f9590df
+langcode: hu
+status: true
+dependencies: {  }
+name: 'Alkotói periódus'
+vid: creative_period
+description: ''
+weight: 0

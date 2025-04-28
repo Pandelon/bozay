@@ -1,0 +1,20 @@
+uuid: 46516fd0-6144-4e9d-9d7d-5c5b750ae333
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+  module:
+    - path
+id: node.opus.path
+field_name: path
+entity_type: node
+bundle: opus
+label: Webcímálnév
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

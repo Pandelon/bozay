@@ -1,0 +1,20 @@
+uuid: 97351775-a4ce-4a16-b9cd-daceb68e57c0
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - bozay
+_core:
+  default_config_hash: 7rR9chwXvdM2H8OYMAYx9Zj3GGlPMrZp_M3ZA4thYTk
+id: bozay_page_title
+theme: bozay
+region: content
+weight: -7
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Oldal címe'
+  label_display: '0'
+  provider: core
+visibility: {  }

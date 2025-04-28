@@ -1,0 +1,19 @@
+uuid: febab712-225c-4f38-8aa7-e4226b16a2f4
+langcode: hu
+status: true
+dependencies:
+  module:
+    - path
+    - user
+id: user.user.path
+field_name: path
+entity_type: user
+bundle: user
+label: Webcímálnév
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

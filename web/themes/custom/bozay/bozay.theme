@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @file
+ * Bozay theme file.
+ */
+function bozay_preprocess_html(&$variables) {
+  $variables['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
+}

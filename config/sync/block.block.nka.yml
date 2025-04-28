@@ -1,0 +1,25 @@
+uuid: a71b033c-471d-40f5-b89b-d11516a2296e
+langcode: hu
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:4a63574a-406d-423f-a20a-bf892dcc58d6'
+  module:
+    - block_content
+  theme:
+    - bozay
+id: nka
+theme: bozay
+region: footer
+weight: -6
+provider: null
+plugin: 'block_content:4a63574a-406d-423f-a20a-bf892dcc58d6'
+settings:
+  id: 'block_content:4a63574a-406d-423f-a20a-bf892dcc58d6'
+  label: NKA
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

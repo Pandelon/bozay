@@ -1,0 +1,20 @@
+uuid: 5fb743d3-cb73-4d5f-bd9f-6393559620e2
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.genre
+  module:
+    - text
+id: taxonomy_term.genre.description
+field_name: description
+entity_type: taxonomy_term
+bundle: genre
+label: Leírás
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,31 @@
+menu_manipulator.settings:
+  type: config_object
+  label: "Menu Manipulator settings"
+  mapping:
+    preprocess_menus_title:
+      type: integer
+      label: "Preprocess title"
+    preprocess_menus_language:
+      type: integer
+      label: "Preprocess menu language"
+    preprocess_menus_language_use_entity:
+      type: integer
+      label: "Menus language use entity"
+    preprocess_menus_language_list:
+      type: sequence
+      label: "Menus to be filtered by language"
+      sequence:
+        type: string
+        label: "Menu name"
+    preprocess_menus_icon:
+      type: integer
+      label: "Preprocess menus icon"
+    preprocess_menus_icon_list:
+      type: sequence
+      label: "Menus to be filtered by language"
+      sequence:
+        type: string
+        label: "Menu name"
+    menu_link_icon_list:
+      type: string
+      label: "List of available icons"

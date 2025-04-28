@@ -1,0 +1,18 @@
+uuid: 91556cec-f4ce-40d3-bad4-4376d2970fd2
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.title
+field_name: title
+entity_type: node
+bundle: opus
+label: Cím
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

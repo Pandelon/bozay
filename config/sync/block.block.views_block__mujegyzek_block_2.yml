@@ -1,0 +1,29 @@
+uuid: 8bb29732-cc5e-4f61-a39b-5cb553e8da6e
+langcode: hu
+status: true
+dependencies:
+  config:
+    - views.view.mujegyzek
+  module:
+    - system
+    - views
+  theme:
+    - bozay
+id: views_block__mujegyzek_block_2
+theme: bozay
+region: content
+weight: -1
+provider: null
+plugin: 'views_block:mujegyzek-block_2'
+settings:
+  id: 'views_block:mujegyzek-block_2'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/mujegyzek\r\n/works"

@@ -1,0 +1,22 @@
+uuid: 5d525443-b01d-4f1e-9362-08e64e8ee2b7
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.creative_period
+id: taxonomy_term.creative_period.status
+field_name: status
+entity_type: taxonomy_term
+bundle: creative_period
+label: Közzétéve
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

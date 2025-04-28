@@ -1,0 +1,22 @@
+uuid: 9104d900-6410-40df-a7f8-e74c36ea1400
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bozay
+_core:
+  default_config_hash: KHQIJ7Vfl25lTjzIc7qIvnuistt-Mw2O0kG4jCofmkI
+id: bozay_messages
+theme: bozay
+region: content
+weight: -8
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: Állapotüzenetek
+  label_display: '0'
+  provider: system
+visibility: {  }

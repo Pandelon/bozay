@@ -1,0 +1,19 @@
+uuid: 7ec66bab-d478-47fe-aa24-dc835e5af34c
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_fontosabb_muvek_keletkezes
+    - node.type.timeline_item
+id: node.timeline_item.field_fontosabb_muvek_keletkezes
+field_name: field_fontosabb_muvek_keletkezes
+entity_type: node
+bundle: timeline_item
+label: 'fontosabb művek keletkezése, bemutatója'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

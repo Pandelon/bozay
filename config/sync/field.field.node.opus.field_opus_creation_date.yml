@@ -1,0 +1,23 @@
+uuid: c2252c4a-500a-4482-a46b-cb05abe2890b
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_opus_creation_date
+    - node.type.opus
+  module:
+    - yearonly
+id: node.opus.field_opus_creation_date
+field_name: field_opus_creation_date
+entity_type: node
+bundle: opus
+label: 'Komponálás ideje'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  yearonly_from: '1953'
+  yearonly_to: now
+field_type: yearonly

@@ -1,0 +1,22 @@
+uuid: 0a007eef-3e51-42e8-a60e-c31e14ef3174
+langcode: hu
+status: true
+dependencies:
+  theme:
+    - bozay
+_core:
+  default_config_hash: X9I1OB0W3WlWtrK-CNcg6hNWwa8wficanpH8pYnDZDE
+id: bozay_local_tasks
+theme: bozay
+region: content
+weight: -6
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Fülek
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: true
+visibility: {  }

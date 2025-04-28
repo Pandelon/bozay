@@ -1,0 +1,8 @@
+uuid: 36fc25c8-007c-448f-afb6-b4b46b75c5ff
+langcode: hu
+status: true
+dependencies: {  }
+id: Q-DnbT83L1sy4kAX_nYRCyT4AJOTpg30-XEPI1hmyNg
+label: 'http://bozay.loc'
+context:
+  language: hu

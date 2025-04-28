@@ -1,0 +1,20 @@
+uuid: 8a2d2a07-7671-423e-94df-4a178f97db96
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.orchestration
+  module:
+    - path
+id: taxonomy_term.orchestration.path
+field_name: path
+entity_type: taxonomy_term
+bundle: orchestration
+label: Webcímálnév
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

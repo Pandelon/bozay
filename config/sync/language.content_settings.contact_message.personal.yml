@@ -1,0 +1,11 @@
+uuid: f2e14760-f935-4c95-95fe-d6c67a008e9d
+langcode: hu
+status: true
+dependencies:
+  config:
+    - contact.form.personal
+id: contact_message.personal
+target_entity_type_id: contact_message
+target_bundle: personal
+default_langcode: site_default
+language_alterable: false

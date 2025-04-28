@@ -1,0 +1,22 @@
+uuid: b85e736b-342b-4d3f-a3d1-a465db81ff2a
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.promote
+field_name: promote
+entity_type: node
+bundle: opus
+label: 'Címlapra helyezve'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

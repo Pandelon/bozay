@@ -1,0 +1,12 @@
+uuid: 06be7ecd-4e41-48c9-8bd7-216798e8ea6d
+langcode: hu
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: PY9HA-hogF4_qq5gZ-TqZDTixx170-APxTcq4rpa014
+id: public_files
+label: 'Nyilvános fájlok könyvtára'
+type: DrupalFiles
+config:
+  name: 'Public Files Directory'
+  directory: 'public://'

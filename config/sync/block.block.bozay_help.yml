@@ -1,0 +1,22 @@
+uuid: 3406eee8-d0cc-473d-aa40-8837b6dde110
+langcode: hu
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - bozay
+_core:
+  default_config_hash: 8I8iACSa0sKO3k3jlvUG1ge52rfcKX7USJAQYnzuBgg
+id: bozay_help
+theme: bozay
+region: content
+weight: -5
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Súgó
+  label_display: '0'
+  provider: help
+visibility: {  }

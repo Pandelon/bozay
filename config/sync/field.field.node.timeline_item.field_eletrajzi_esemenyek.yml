@@ -1,0 +1,19 @@
+uuid: 6bd22402-b9e3-4276-87b9-b7c37e5f241e
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_eletrajzi_esemenyek
+    - node.type.timeline_item
+id: node.timeline_item.field_eletrajzi_esemenyek
+field_name: field_eletrajzi_esemenyek
+entity_type: node
+bundle: timeline_item
+label: 'életrajzi események'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

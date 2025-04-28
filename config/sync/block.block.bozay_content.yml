@@ -1,0 +1,22 @@
+uuid: e64ab103-2217-4ef6-b9d8-d02b68cecd02
+langcode: hu
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bozay
+_core:
+  default_config_hash: 9EoWV2Lot6FVSr50t4hoKgiz1LIXYWNG-IIPYsWxBqo
+id: bozay_content
+theme: bozay
+region: content
+weight: -3
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Az oldal fő tartalma'
+  label_display: '0'
+  provider: system
+visibility: {  }

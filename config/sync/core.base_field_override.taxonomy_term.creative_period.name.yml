@@ -1,0 +1,18 @@
+uuid: 7d8ee5e4-208d-40e8-b488-8cef145917cc
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.creative_period
+id: taxonomy_term.creative_period.name
+field_name: name
+entity_type: taxonomy_term
+bundle: creative_period
+label: Név
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

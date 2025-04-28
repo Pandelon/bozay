@@ -1,0 +1,19 @@
+uuid: 14677d9e-6944-4c31-8870-9266b32ee47b
+langcode: hu
+status: true
+dependencies:
+  module:
+    - link
+    - node
+id: node.field_listen
+field_name: field_listen
+entity_type: node
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

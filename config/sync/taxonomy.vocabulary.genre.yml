@@ -1,0 +1,8 @@
+uuid: 20d046a1-254b-4c66-a18e-c79a760e39f6
+langcode: hu
+status: true
+dependencies: {  }
+name: Műfaj
+vid: genre
+description: ''
+weight: 0

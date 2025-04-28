@@ -1,0 +1,22 @@
+uuid: 965eec6e-c8ea-4a23-b0c4-65c082558e13
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: oldal
+label: oldal
+type: 'canonical_entities:node'
+pattern: '[node:title]'
+selection_criteria:
+  33edda76-2f05-4b91-b5ec-4cc5258ad6ba:
+    id: node_type
+    negate: false
+    uuid: 33edda76-2f05-4b91-b5ec-4cc5258ad6ba
+    context_mapping:
+      node: node
+    bundles:
+      page: page
+selection_logic: and
+weight: -5
+relationships: {  }

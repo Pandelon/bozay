@@ -1,0 +1,22 @@
+uuid: 96f21f13-202e-4838-a760-d00433fc500a
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.timeline_item
+id: node.timeline_item.promote
+field_name: promote
+entity_type: node
+bundle: timeline_item
+label: 'Címlapra helyezve'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

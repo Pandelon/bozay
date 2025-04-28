@@ -1,0 +1,20 @@
+uuid: 8353ab9a-5dd9-4a20-b9ee-55842e5c238b
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.menu_link
+field_name: menu_link
+entity_type: node
+bundle: opus
+label: Menühivatkozás
+description: 'Számított menühivatkozás a tartalomra (csak a tartalom mentésekor elérhető).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: default
+  handler_settings: {  }
+field_type: entity_reference

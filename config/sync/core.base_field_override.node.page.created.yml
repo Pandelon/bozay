@@ -1,0 +1,18 @@
+uuid: eb2fd18e-14ff-4a56-8ecf-8ab599a79fd2
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.created
+field_name: created
+entity_type: node
+bundle: page
+label: 'Beküldés ideje'
+description: 'Az időpont, mikor a tartalmat létrehozták.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

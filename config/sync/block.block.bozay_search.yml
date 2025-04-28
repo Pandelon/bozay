@@ -1,0 +1,23 @@
+uuid: 07eb04b3-8e1e-4f19-ad3f-d9ae4080bcc9
+langcode: hu
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - bozay
+_core:
+  default_config_hash: Q-4EcGAsu26ICu4ejEz0uE1zv4akpiaOsizxgZfAmEw
+id: bozay_search
+theme: bozay
+region: nav_additional
+weight: -7
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Keresés
+  label_display: '0'
+  provider: search
+  page_id: node_search
+visibility: {  }

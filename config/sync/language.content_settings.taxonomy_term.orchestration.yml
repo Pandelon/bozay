@@ -1,0 +1,18 @@
+uuid: 2eee308a-28fd-48bc-80e2-6a164e1e67ae
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.orchestration
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '1'
+id: taxonomy_term.orchestration
+target_entity_type_id: taxonomy_term
+target_bundle: orchestration
+default_langcode: site_default
+language_alterable: true

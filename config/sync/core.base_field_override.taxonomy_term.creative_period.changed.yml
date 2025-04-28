@@ -1,0 +1,18 @@
+uuid: cb5f28ca-c0df-46d9-9d23-4f48db786144
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.creative_period
+id: taxonomy_term.creative_period.changed
+field_name: changed
+entity_type: taxonomy_term
+bundle: creative_period
+label: Módosítva
+description: 'Az időpont, mikor a kifejezést utoljára szerkesztették.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

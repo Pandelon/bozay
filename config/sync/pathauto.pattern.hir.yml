@@ -1,0 +1,22 @@
+uuid: 88179a5c-b476-4d12-89d4-9680008cce2d
+langcode: hu
+status: true
+dependencies:
+  module:
+    - node
+id: hir
+label: Hír
+type: 'canonical_entities:node'
+pattern: 'hír/[node:title]'
+selection_criteria:
+  b005d919-3c0f-4d6f-960f-bdc813516506:
+    id: node_type
+    negate: false
+    uuid: b005d919-3c0f-4d6f-960f-bdc813516506
+    context_mapping:
+      node: node
+    bundles:
+      article: article
+selection_logic: and
+weight: -5
+relationships: {  }

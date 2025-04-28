@@ -1,0 +1,18 @@
+uuid: acbd3ba1-3dc3-4fc7-9dbd-d933624c746a
+langcode: hu
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.creative_period
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: taxonomy_term.creative_period
+target_entity_type_id: taxonomy_term
+target_bundle: creative_period
+default_langcode: und
+language_alterable: true

@@ -1,0 +1,18 @@
+field.field_settings.yearonly:
+  type: mapping
+  label: 'Year Only range settings'
+  mapping:
+    yearonly_from:
+      type: string
+      label: 'Start year'
+    yearonly_to:
+      type: string
+      label: 'End year'
+
+field.widget.settings.yearonly_default:
+  type: mapping
+  label: 'Year Only select list widget settings'
+  mapping:
+    sort_order:
+      type: string
+      label: 'Sort order'

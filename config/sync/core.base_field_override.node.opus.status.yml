@@ -1,0 +1,22 @@
+uuid: a1c9389c-b2fd-44b8-90e7-d4ece0cfee36
+langcode: hu
+status: true
+dependencies:
+  config:
+    - node.type.opus
+id: node.opus.status
+field_name: status
+entity_type: node
+bundle: opus
+label: Közzétéve
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: Be
+  off_label: Ki
+field_type: boolean

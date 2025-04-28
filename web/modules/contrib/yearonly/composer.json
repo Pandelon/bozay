@@ -1,0 +1,11 @@
+{
+    "name": "drupal/yearonly",
+    "description": "Provides a field to collect only the year portion of a date.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://drupal.org/project/yearonly",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/yearonly",
+        "source": "https://git.drupalcode.org/project/yearonly"
+    }
+}

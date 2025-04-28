@@ -1,0 +1,29 @@
+uuid: 44805bc7-3212-4161-954b-48ad542ff8f1
+langcode: hu
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_period
+    - node.type.opus
+    - taxonomy.vocabulary.creative_period
+id: node.opus.field_period
+field_name: field_period
+entity_type: node
+bundle: opus
+label: 'Alkotói periódus'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      creative_period: creative_period
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference
