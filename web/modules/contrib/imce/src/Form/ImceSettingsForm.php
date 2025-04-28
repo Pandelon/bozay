@@ -150,9 +150,13 @@ class ImceSettingsForm extends ConfigFormBase {
     $imce_url = Url::fromRoute('imce.page')->toString();
     $rp_table = ['#header' => [$this->t('Role')]];
     $default = $this->configSystemFile->get('default_scheme');
+    $suffixes = [$default => ' (' . $this->t('Default') . ')'];
     foreach ($wrappers as $scheme => $name) {
-      $url = $scheme === $default ? $imce_url : $imce_url . '/' . $scheme;
-      $rp_table['#header'][]['data'] = ['#markup' => '<a href="' . $url . '">' . Html::escape($name) . '</a>'];
+      $url = $scheme === $default ? $imce_url : "$imce_url/$scheme";
+      $name = Html::escape($name);
+      $suffix = $suffixes[$scheme] ?? '';
+      $html = '<a href="' . $url . '">' . $name . '</a>' . $suffix;
+      $rp_table['#header'][] = ['data' => ['#markup' => $html]];
     }
     return $rp_table;
   }
@@ -187,24 +191,17 @@ class ImceSettingsForm extends ConfigFormBase {
     $roles = Role::loadMultiple();
     $wrappers = $this->streamWrapperManager->getNames(StreamWrapperInterface::WRITE_VISIBLE);
 
-    $imce_url = Url::fromRoute('imce.page')->toString();
-
     $rp_table += $this->buildHeaderProfilesTable($wrappers);
     $rp_table += $this->buildRowsProfilesTables($roles, $roles_profiles, $wrappers);
 
     // Add description.
     $rp_table['#prefix'] = '<h3>' . $this->t('Role-profile assignments') . '</h3>';
-    $desc = $this->t(
-      'Assign configuration profiles to user roles for available file systems. Users with multiple roles get the bottom most profile.'
+    $desc = $this->t('Assign configuration profiles to user roles for available file systems.') . '<br>';
+    $desc .= $this->t(
+      '<strong>A user with multiple roles gets the last profile assigned</strong>. You may want to <a href=":url">re-order your roles</a> for the correct assignment.',
+      [':url' => Url::fromRoute('entity.user_role.collection')->toString()]
     );
-    $desc .= ' ' . $this->t(
-      'The default file system %name is accessible at :url path.',
-      [
-        '%name' => $wrappers[$this->configSystemFile->get('default_scheme')],
-        ':url' => $imce_url,
-      ]
-    );
-    $rp_table['#suffix'] = '<div class="description">' . $desc . '</div>';
+    $rp_table['#prefix'] .= '<div class="description">' . $desc . '</div>';
     return $rp_table;
   }
 

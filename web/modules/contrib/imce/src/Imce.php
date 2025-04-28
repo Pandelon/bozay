@@ -18,14 +18,14 @@ class Imce {
   /**
    * Checks if a user has an imce profile assigned for a file scheme.
    */
-  public static function access(AccountProxyInterface $user = NULL, $scheme = NULL) {
+  public static function access(?AccountProxyInterface $user = NULL, ?string $scheme = NULL) {
     return (bool) static::userProfile($user, $scheme);
   }
 
   /**
    * Returns a response for an imce request.
    */
-  public static function response(Request $request, AccountProxyInterface $user = NULL, $scheme = NULL) {
+  public static function response(Request $request, ?AccountProxyInterface $user = NULL, ?string $scheme = NULL) {
     return static::userFM($user, $scheme, $request)->pageResponse();
   }
 
@@ -33,7 +33,7 @@ class Imce {
    * Returns a file manager instance for a user.
    */
   // @codingStandardsIgnoreLine
-  public static function userFM(AccountProxyInterface $user = NULL, $scheme = NULL, Request $request = NULL) {
+  public static function userFM(?AccountProxyInterface $user = NULL, ?string $scheme = NULL, ?Request $request = NULL) {
     $conf = static::userConf($user, $scheme);
     if ($conf) {
       return new ImceFM($conf, $user, $request);
@@ -43,7 +43,7 @@ class Imce {
   /**
    * Returns imce configuration profile for a user.
    */
-  public static function userProfile(AccountProxyInterface $user = NULL, $scheme = NULL) {
+  public static function userProfile(?AccountProxyInterface $user = NULL, ?string $scheme = NULL) {
     $profiles = &drupal_static(__METHOD__, []);
     $user = $user ?: static::currentUser();
     $scheme = $scheme ?? \Drupal::config('system.file')->get('default_scheme');
@@ -84,7 +84,7 @@ class Imce {
   /**
    * Returns processed profile configuration for a user.
    */
-  public static function userConf(AccountProxyInterface $user = NULL, $scheme = NULL) {
+  public static function userConf(?AccountProxyInterface $user = NULL, ?string $scheme = NULL) {
     $user = $user ?: static::currentUser();
     $scheme = $scheme ?? \Drupal::config('system.file')->get('default_scheme');
     $profile = static::userProfile($user, $scheme);
@@ -99,7 +99,7 @@ class Imce {
   /**
    * Processes raw profile configuration of a user.
    */
-  public static function processUserConf(array $conf, AccountProxyInterface $user) {
+  public static function processUserConf(array $conf, ?AccountProxyInterface $user) {
     // Convert MB to bytes.
     $conf['maxsize'] = (int) ((float) $conf['maxsize'] * 1048576);
     $conf['quota'] = (int) ((float) $conf['quota'] * 1048576);
@@ -131,7 +131,7 @@ class Imce {
   /**
    * Processes user folders.
    */
-  public static function processUserFolders(array $folders, AccountProxyInterface $user) {
+  public static function processUserFolders(array $folders, ?AccountProxyInterface $user) {
     $ret = [];
     $token_service = \Drupal::token();
     $meta = new BubbleableMetadata();
@@ -360,7 +360,7 @@ class Imce {
    *
    * Returns the accessible paths.
    */
-  public static function accessFilePaths(array $paths, AccountProxyInterface $user = NULL, $scheme = NULL) {
+  public static function accessFilePaths(array $paths, ?AccountProxyInterface $user = NULL, ?string $scheme = NULL) {
     $ret = [];
     $fm = static::userFM($user, $scheme);
     if ($fm) {
@@ -384,7 +384,7 @@ class Imce {
   /**
    * Checks if a file uri is accessible by a user with Imce.
    */
-  public static function accessFileUri($uri, AccountProxyInterface $user = NULL) {
+  public static function accessFileUri($uri, ?AccountProxyInterface $user = NULL) {
     [$scheme, $path] = explode('://', $uri, 2);
     return $scheme && $path && static::accessFilePaths([$path], $user, $scheme);
   }

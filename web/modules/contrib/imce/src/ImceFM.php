@@ -483,6 +483,10 @@ class ImceFM {
     if (!empty($this->conf['url_alter'])) {
       $properties['url'] = Imce::service('file_url_generator')->generateAbsoluteString($uri);
     }
+    // Skip image properties if lazy_dimensions is enabled.
+    if (!empty($this->conf['lazy_dimensions'])) {
+      return $properties;
+    }
     // Get image properties.
     $regexp = $this->conf['image_extensions_regexp'] ?? $this->imageExtensionsRegexp();
     if ($regexp && preg_match($regexp, $uri)) {
@@ -659,9 +663,9 @@ class ImceFM {
   public function validateImageTypes(array $items, $silent = FALSE) {
     $regex = $this->imageExtensionsRegexp();
     foreach ($items as $item) {
-      if ($item->type === 'folder' || !preg_match($regex, $item->name)) {
+      if ($item->type !== 'file' || !preg_match($regex, $item->name)) {
         if (!$silent) {
-          $this->setMessage($this->t('%name is not an image.', ['%name' => $item->name]));
+          $this->setMessage($this->t('%name is not a supported image type.', ['%name' => $item->name]));
         }
         return FALSE;
       }

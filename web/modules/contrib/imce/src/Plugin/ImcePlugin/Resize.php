@@ -73,6 +73,9 @@ class Resize extends ImcePluginBase {
       $image = $factory->get($uri);
       // Check if image is valid.
       if (!$image->isValid()) {
+        $fm->setMessage(t('%name is not a valid image.', [
+          '%name' => $item->name,
+        ]));
         continue;
       }
       // Check if resizing is needed.

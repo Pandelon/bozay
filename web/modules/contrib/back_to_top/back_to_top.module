@@ -32,7 +32,7 @@ function back_to_top_page_attachments(array &$attachments) {
 
   $attachments['#attached']['library'][] = 'back_to_top/back_to_top_js';
   $attachments['#attached']['drupalSettings']['back_to_top']['back_to_top_button_trigger'] = $settings['back_to_top_button_trigger'];
-  $attachments['#attached']['drupalSettings']['back_to_top']['back_to_top_speed'] = $settings['back_to_top_speed'];
+  $attachments['#attached']['drupalSettings']['back_to_top']['back_to_top_speed'] = isset($settings['back_to_top_speed']) ? $settings['back_to_top_speed'] : 1000;;
 
   // Add stylesheet for image or text/css button.
   if (($settings['back_to_top_button_type']) == "text") {

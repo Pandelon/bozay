@@ -5,7 +5,7 @@ configure: back_to_top_settings
 package: "User interface"
 type: module
 
-# Information added by Drupal.org packaging script on 2024-10-21
-version: '3.0.2'
+# Information added by Drupal.org packaging script on 2025-03-25
+version: '3.0.3'
 project: 'back_to_top'
-datestamp: 1729503087
+datestamp: 1742891368

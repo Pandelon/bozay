@@ -52,7 +52,9 @@
             }
           });
           speed = settings.back_to_top.back_to_top_speed;
-          speed = null || 1200;
+            if (speed == null) {
+              speed = 1200;
+            }
           scrollTo(0, speed);
         });
       });

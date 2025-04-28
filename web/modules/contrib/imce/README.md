@@ -91,6 +91,10 @@ lando php core/scripts/run-tests.sh --php /usr/local/bin/php
 --url http://example.lndo.site --dburl mysql://drupal8:drupal8@database/drupal8
 --sqlite simpletest.sqlite --module imce --verbose --color
 
+## About the name IMCE
+
+IMCE was originally implemented as an image browser for TinyMCE Editor.
+It's short for "Image for TinyMCE".
 
 ## Maintainers
 [//]: # cspell:disable
