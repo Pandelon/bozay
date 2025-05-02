@@ -2,6 +2,7 @@
 
 namespace Drupal\menu_manipulator\Menu;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -14,7 +15,7 @@ use Drupal\Core\Menu\InaccessibleMenuLink;
 use Drupal\Core\Menu\MenuLinkBase;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\Router;
-use Drupal\Core\Url;
+use Drupal\views\Plugin\Menu\ViewsMenuLink;
 
 /**
  * Provides a menu link tree manipulators.
@@ -27,6 +28,13 @@ use Drupal\Core\Url;
 class MenuLinkTreeManipulators {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepository
@@ -34,25 +42,18 @@ class MenuLinkTreeManipulators {
   protected $entityRepository;
 
   /**
-   * The current language ID.
+   * The language manager.
    *
-   * @var string
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $langcode;
+  protected $languageManager;
 
   /**
-   * The menu_link_content storage.
+   * The configuration factory.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $menuLinkContentStorage;
-
-  /**
-   * Our custom configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
+  protected $configFactory;
 
   /**
    * A router instance.
@@ -64,15 +65,15 @@ class MenuLinkTreeManipulators {
   /**
    * Constructs a \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators object.
    *
+   * @param \Drupal\Core\Entity\EntityRepository $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Entity\EntityRepository $entity_repository
-   *   The entity repository.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @var \Drupal\Core\Routing\Router $router
+   * @param \Drupal\Core\Routing\Router $router
    *   The router instance.
    */
   public function __construct(
@@ -83,9 +84,9 @@ class MenuLinkTreeManipulators {
     Router $router
   ) {
     $this->entityRepository = $entity_repository;
-    $this->menuLinkContentStorage = $entity_type_manager->getStorage('menu_link_content');
-    $this->langcode = $language_manager->getCurrentLanguage()->getId();
-    $this->config = $config_factory->get('menu_manipulator.settings');
+    $this->entityTypeManager = $entity_type_manager;
+    $this->languageManager = $language_manager;
+    $this->configFactory = $config_factory;
     $this->router = $router;
   }
 
@@ -117,8 +118,8 @@ class MenuLinkTreeManipulators {
       if ($element->hasChildren && !empty($tree[$key]->subtree)) {
         $element->subtree = $this->filterTreeByCurrentLanguage($element->subtree);
       }
-
     }
+
     return $tree;
   }
 
@@ -147,7 +148,10 @@ class MenuLinkTreeManipulators {
   }
 
   /**
+   * Checking the link access.
    *
+   * @param \Drupal\Core\Menu\MenuLinkBase $link
+   *   `The Menu Link Content entity.
    */
   public function checkLinkAccess(MenuLinkBase $link) {
     $langcode = $this->getLinkLanguage($link);
@@ -162,40 +166,53 @@ class MenuLinkTreeManipulators {
       return TRUE;
     }
 
+    $current_langcode = $this->getCurrentLangcode();
+
     // Check if referenced entity can be used. Yes by default.
     $options = $link->getOptions() ?: [];
-    $language_use_entity_default = $this->config->get('preprocess_menus_language_use_entity') ?? 1;
+    $settings = $this->configFactory->get('menu_manipulator.settings');
+    $language_use_entity_default = $settings->get('preprocess_menus_language_use_entity') ?? 1;
     $language_use_entity = $options['language_use_entity'] ?? $language_use_entity_default;
     if ($language_use_entity) {
       $entity = $this->getLinkEntity($link);
       // Allow if targeted entity is translated, no matter menu item's language.
       if ($entity instanceof ContentEntityInterface && method_exists($entity, 'hasTranslation')) {
-        return $entity->hasTranslation($this->langcode);
+        return $entity->hasTranslation($current_langcode);
       }
     }
 
     // Allow by the menu item's language itself.
-    return $this->langcode == $langcode;
+    return $current_langcode == $langcode;
   }
 
   /**
    * Force the MenuLinkBase to tell us its language code.
    *
    * @param \Drupal\Core\Menu\MenuLinkBase $link
-   *   `The Menu Link Content entity.
+   *   The Menu Link item - usually an menu_link_content entity but it can be a
+   *   config from Views or something else we don't even know about yet.
    *
    * @return string
    *   The menu Link language ID or a default value.
+   *
+   * @todo Handle config links such as those added by Views (e.g. get language).
    */
   protected function getLinkLanguage(MenuLinkBase $link) {
     $metadata = $link->getMetaData();
-    if (!isset($metadata['entity_id'])) {
-      return LanguageInterface::LANGCODE_NOT_APPLICABLE;
+    $entity_id = $metadata['entity_id'] ?? NULL;
+
+    if ($entity_id && $this->entityTypeManager->hasHandler('menu_link_content', 'storage')) {
+      if ($loaded_link = $this->entityTypeManager->getStorage('menu_link_content')->load($entity_id)) {
+        if ($loaded_lang_link = $this->entityRepository->getTranslationFromContext($loaded_link)) {
+          return $loaded_lang_link->language()->getId();
+        }
+      }
     }
 
-    if ($loaded_link = $this->menuLinkContentStorage->load($metadata['entity_id'])) {
-      if ($loaded_lang_link = $this->entityRepository->getTranslationFromContext($loaded_link)) {
-        return $loaded_lang_link->language()->getId();
+    if ($link instanceof ViewsMenuLink) {
+      $langcode = $this->getCurrentLangcode();
+      if ($this->viewHasTranslation($langcode, $metadata['view_id'], $metadata['display_id'])) {
+        return $langcode;
       }
     }
 
@@ -206,21 +223,15 @@ class MenuLinkTreeManipulators {
    * Get targeted entity for a given MenuLinkBase.
    *
    * @param \Drupal\Core\Menu\MenuLinkBase $link
-   *   `The Menu Link Content entity.
+   *   The Menu Link Content entity.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null|bool
    *   FALSE if Url is unrouted. Otherwise, an entity object variant or NULL.
    */
   protected function getLinkEntity(MenuLinkBase $link) {
-    $metadata = $link->getMetaData();
-    if (!isset($metadata['entity_id'])) {
-      return NULL;
-    }
-
-    $loaded_link = $this->menuLinkContentStorage->load($metadata['entity_id']);
-    $uri = $loaded_link->get('link')->getString();
-    $url = Url::fromUri($uri);
-    if (!$url instanceof Url || !$url->isRouted()) {
+    // Skip if <nolink> or empty.
+    $uri = $link->getUrlObject()->toString();
+    if (!UrlHelper::isValid($uri)) {
       return FALSE;
     }
 
@@ -239,11 +250,72 @@ class MenuLinkTreeManipulators {
           }
         }
       }
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       /* Fail silently */
     }
 
     return FALSE;
   }
 
+  /**
+   * Check if a View has translation.
+   *
+   * @param string $langcode
+   *   A given language ID.
+   * @param string $view_id
+   *   A given View ID.
+   * @param string $display_id
+   *   (optional) A given display ID (default: `default`).
+   *
+   * @return bool
+   *   Wether or not the View has translation for the given langcode.
+   */
+  protected function viewHasTranslation(string $langcode, string $view_id, string $display_id = 'default') {
+    // Get translated configuration.
+    $view_config_id = 'views.view.' . $view_id;
+    $view_config_translated = $this->configFactory->get($view_config_id)->get();
+    $view_langcode = $view_config_translated['langcode'] ?? NULL;
+
+    // No more logic if View's language is the current language.
+    if ($view_langcode == $langcode) {
+      return $view_langcode;
+    }
+
+    // Load original configuration to compare differences between languages.
+    // If differences found between configs, it means View is translated.
+    // Returns the current_language to mark this View link as translated.
+    $language = $this->languageManager->getLanguage($view_langcode);
+    $this->languageManager->setConfigOverrideLanguage($language);
+    $view_config_original = $this->configFactory->get($view_config_id)->get();
+
+    // Reset current language to avoid impacts on other parts of the code.
+    $language = $this->languageManager->getLanguage($langcode);
+    $this->languageManager->setConfigOverrideLanguage($language);
+
+    $view_diff = json_encode($view_config_translated) === json_encode($view_config_original);
+    if ($view_diff) {
+      return $langcode;
+    }
+
+    // No diff at the main config level. Check the current display.
+    $display_config_translated = $view_config_translated['display'][$display_id] ?? [];
+    $display_config_original = $view_config_original['display'][$display_id] ?? [];
+    $display_diff = json_encode($display_config_translated) === json_encode($display_config_original);
+    if ($display_diff) {
+      return $langcode;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Gets the current language ID.
+   * Get
+   * @return string
+   *   The langcode.
+   */
+  protected function getCurrentLangcode(): string {
+    return $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+  }
 }

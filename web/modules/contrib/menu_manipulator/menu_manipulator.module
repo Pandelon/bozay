@@ -21,7 +21,7 @@ function menu_manipulator_help($route_name, CurrentRouteMatch $route_match) {
     if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
       return '<pre>' . $text . '</pre>';
     }
-    
+
     // Use the Markdown filter to render the README.
     $filter_manager = \Drupal::service('plugin.manager.filter');
     $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
@@ -107,7 +107,7 @@ function menu_manipulator_preprocess_menu(&$variables, $hook) {
   // Display icons.
   $selected_menus = $config->get('preprocess_menus_icon_list') ?? [];
   $selected_menus = array_filter($selected_menus, function ($v) {
-    return $v !== 0;
+    return !empty($v);
   });
 
   if (($selected_menus[$menu_name] ?? 0) !== 0) {
@@ -150,7 +150,7 @@ function menu_manipulator_form_menu_link_content_form_alter(array &$form, FormSt
   // Check if menu can have icons (all menu can by default).
   $menus_with_icon = $config->get('preprocess_menus_icon_list') ?? [];
   $selected_menus_with_icons = array_filter($menus_with_icon, function ($v) {
-    return $v !== 0;
+    return !empty($v);
   });
   $menus_with_icon = !empty($selected_menus_with_icons) ? $selected_menus_with_icons : array_keys($menus_with_icon);
   $can_have_icon = in_array($menu_link->getMenuName(), $menus_with_icon);
@@ -161,7 +161,7 @@ function menu_manipulator_form_menu_link_content_form_alter(array &$form, FormSt
     '#weight' => -2,
   ];
 
-  // Icons
+  // Icons.
   $icon_list_value = $config->get('menu_link_icon_list') ?: '';
   $icon_list = menu_manipulator_prepare_associative_list($icon_list_value);
   $form['menu_manipulator']['menu_link_icon'] = [
@@ -191,6 +191,11 @@ function menu_manipulator_form_menu_link_content_form_alter(array &$form, FormSt
  * Entity builder for menu item entity form.
  */
 function menu_manipulator_menu_link_content_form_entity_builder($entity_type, EntityInterface $menu_link, &$form, FormStateInterface $form_state) {
+  // Don't do anything when we have no link.
+  if (!$menu_link->link || $menu_link->link->isEmpty()) {
+    return;
+  }
+
   // Attach extra options to Menu Link Content entity.
   $menu_link_options = $menu_link->link->first()->options ?: [];
   $menu_link_options['icon'] = $form_state->getValue('menu_link_icon');
@@ -256,7 +261,7 @@ function menu_manipulator_menu_is_filterable_by_language(string $menu_name) {
 
   $selected_menus = $config->get('preprocess_menus_language_list') ?? [];
   $selected_menus = array_filter($selected_menus, function ($v) {
-    return $v !== 0;
+    return !empty($v);    
   });
 
   // Filter this menu by default.

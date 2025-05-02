@@ -2,14 +2,11 @@ menu_manipulator.settings:
   type: config_object
   label: "Menu Manipulator settings"
   mapping:
-    preprocess_menus_title:
-      type: integer
-      label: "Preprocess title"
     preprocess_menus_language:
-      type: integer
+      type: boolean
       label: "Preprocess menu language"
     preprocess_menus_language_use_entity:
-      type: integer
+      type: boolean
       label: "Menus language use entity"
     preprocess_menus_language_list:
       type: sequence
@@ -18,7 +15,7 @@ menu_manipulator.settings:
         type: string
         label: "Menu name"
     preprocess_menus_icon:
-      type: integer
+      type: boolean
       label: "Preprocess menus icon"
     preprocess_menus_icon_list:
       type: sequence

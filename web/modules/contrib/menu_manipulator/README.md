@@ -1,6 +1,6 @@
 CONTENTS OF THIS FILE
 ---------------------
-   
+
  * Introduction
  * Requirements
  * Recommended modules
@@ -43,7 +43,7 @@ RECOMMENDED MODULES
 
 INSTALLATION
 ------------
- 
+
  * Install as you would normally install a contributed Drupal module. Visit:
    https://drupal.org/documentation/install/modules-themes/modules-8
    for further information.
@@ -70,7 +70,7 @@ A: Easy. There's a new service `menu_manipulator.menu_tree_manipulators`
   that is used to apply filters upon Menu Trees before rendering.
 
   We have created a custom method to automatically filter by language.
-  
+
   You can find code example in `menu_manipulator.module` file.
 
 
@@ -81,3 +81,8 @@ Current maintainers:
  * Matthieu Scarset (matthieuscarset) - https://www.drupal.org/user/3471281/
 
 This project has not been sponsored - yet.
+
+CREDITS
+-----------
+
+<a href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Freepik - Flaticon</a>

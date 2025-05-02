@@ -1,5 +1,5 @@
-preprocess_menus_language: 1
-preprocess_menus_language_use_entity: 1
+preprocess_menus_language: true
+preprocess_menus_language_use_entity: true
 preprocess_menus_language_list:
   footer: footer
   main: main
@@ -7,7 +7,7 @@ preprocess_menus_language_list:
   admin: ''
   links: ''
   tools: ''
-preprocess_menus_icon: 1
+preprocess_menus_icon: true
 preprocess_menus_icon_list:
   account: ''
   admin: ''

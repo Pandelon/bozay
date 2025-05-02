@@ -73,7 +73,7 @@ class MenuManipulatorSettingsForm extends ConfigFormBase {
    *   The menu storage service.
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The language manager handler.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_menu
    *   The cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
@@ -140,7 +140,7 @@ class MenuManipulatorSettingsForm extends ConfigFormBase {
     $form['language']['preprocess_menus_language_use_entity'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Use referenced entity's language to filter menus by current's user language"),
-      '#default_value' => $config->get('preprocess_menus_language_use_entity') ?? 1,
+      '#default_value' => $config->get('preprocess_menus_language_use_entity') ?? TRUE,
     ];
     $form['language']['preprocess_menus_language_list'] = [
       '#type' => 'checkboxes',
@@ -164,7 +164,7 @@ class MenuManipulatorSettingsForm extends ConfigFormBase {
     $form['theming']['preprocess_menus_icon'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Process menu items to display icons"),
-      '#default_value' => $config->get('preprocess_menus_icon') ?? 1,
+      '#default_value' => $config->get('preprocess_menus_icon') ?? TRUE,
     ];
     $form['theming']['menu_link_icon_list'] = [
       '#type' => 'textarea',
@@ -216,7 +216,10 @@ class MenuManipulatorSettingsForm extends ConfigFormBase {
     $config = $this->config('menu_manipulator.settings');
 
     $exclude = ['submit', 'form_build_id', 'form_token', 'form_id', 'op'];
-    $subvalues_as_string = ['preprocess_menus_language_list', 'preprocess_menus_icon_list'];
+    $subvalues_as_string = [
+      'preprocess_menus_language_list',
+      'preprocess_menus_icon_list',
+    ];
     foreach ($form_state->getValues() as $key => $data) {
       if (!in_array($key, $exclude)) {
         if (in_array($key, $subvalues_as_string)) {
