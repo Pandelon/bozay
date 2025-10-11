@@ -1488,5 +1488,4 @@ class EuCookieComplianceConfigForm extends ConfigFormBase {
       }
     }
   }
-
 }

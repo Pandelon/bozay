@@ -716,3 +716,22 @@ function eu_cookie_compliance_update_8128() {
     ->set('close_button_action', 'close_banner')
     ->save();
 }
+
+/**
+ * Regenerate disabling script.
+ */
+function eu_cookie_compliance_update_8129() {
+  $config = Drupal::config('eu_cookie_compliance.settings');
+  $disabled_javascripts = $config->get('disabled_javascripts');
+  if (!empty($disabled_javascripts)) {
+    $script_manager = \Drupal::service('eu_cookie_compliance.script_file_manager');
+    $state = $script_manager->buildDisabledJsScript($disabled_javascripts)->save();
+
+    if ($state) {
+      \Drupal::logger('eucc')->info('Created new disabling script');
+    } else {
+      \Drupal::logger('eucc')
+        ->warning('Failed to create new disabling script, you should visit the settings page immediately');
+    }
+  }
+}

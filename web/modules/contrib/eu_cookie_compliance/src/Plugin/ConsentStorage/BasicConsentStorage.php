@@ -65,6 +65,11 @@ class BasicConsentStorage extends ConsentStorageBase {
     $revision_id = $this->getCurrentPolicyNodeRevision();
     $timestamp = $this->time->getRequestTime();
     $ip_address = \Drupal::request()->getClientIp();
+    $server_xforwarded_for = \Drupal::request()->server->get('HTTP_X_FORWARDED_FOR');
+    if (!empty($server_xforwarded_for)) {
+      $header_xforwarded_for = \Drupal::request()->headers->get('X-Forwarded-For');
+      $ip_address = explode(",", $header_xforwarded_for)[0];
+    }
     $uid = \Drupal::currentUser()->id();
 
     \Drupal::database()->insert('eu_cookie_compliance_basic_consent')->fields(

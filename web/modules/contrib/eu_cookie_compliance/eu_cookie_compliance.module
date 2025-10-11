@@ -50,6 +50,22 @@ function eu_cookie_compliance_help($route_name, RouteMatchInterface $route_match
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function eu_cookie_compliance_module_implements_alter(&$implementations, $hook) {
+  switch ($hook) {
+    case 'page_attachments':
+    case 'js_alter':
+      // Ensure that the module is the last one to be run.
+      // Avoids edge cases where a script is added after the module alters the scripts.
+      $group = $implementations['eu_cookie_compliance'];
+      unset($implementations['eu_cookie_compliance']);
+      $implementations['eu_cookie_compliance'] = $group;
+      break;
+  }
+}
+
+/**
  * Implements hook_page_attachments().
  */
 function eu_cookie_compliance_page_attachments(&$variables) {
@@ -153,30 +169,7 @@ function eu_cookie_compliance_page_attachments(&$variables) {
     $hide_the_banner = TRUE;
   }
 
-  $language = \Drupal::languageManager()->getCurrentLanguage();
-
-  // Start building out a cache tag.
-  $cid = 'eu_cookie_compliance_data:' . $language->getId();
-
-  // Check if the domain should be added to the cache tag.
-  $moduleHandler = \Drupal::service('module_handler');
-  if ($moduleHandler->moduleExists('domain') && count(\Drupal::entityTypeManager()->getStorage('domain')->getQuery()
-    ->accessCheck(TRUE)
-    ->range(0, 1)->execute()) > 0) {
-    $cid .= ':' . \Drupal::service('domain.negotiator')->getActiveId();
-  }
-  // Add the current theme to the cache tag.
-  $cid .= ':' . \Drupal::service('theme.manager')->getActiveTheme()->getName();
-  // Allow other modules to alter the cache id.
-  \Drupal::moduleHandler()->alter('eu_cookie_compliance_cid', $cid);
-
-  if ($cache = \Drupal::cache('render')->get($cid)) {
-    $data = $cache->data;
-  }
-  else {
-    $data = eu_cookie_compliance_build_data();
-    \Drupal::cache('render')->set($cid, $data, Cache::PERMANENT, $config->getCacheTags());
-  }
+  $data = eu_cookie_compliance_build_data();
 
   $system_theme = \Drupal::config('system.theme')->get('default');
   $theme_object = \Drupal::service('theme_handler')->listInfo()[$system_theme];
@@ -234,13 +227,14 @@ function eu_cookie_compliance_page_attachments(&$variables) {
     }
     else {
       \Drupal::messenger()
-        ->addError(t('Could not read the EU Cookie Compliance JavaScript file that is used to handle disabled scripts. There may be a problem with your file system or the file may be missing. Try accessing the EU Cookie Compliance settings page and re-save the form.'));
+        ->addError(t('Could not read the EU Cookie Compliance JavaScript file that is used to handle disabled scripts. There may be a problem with your file system or the file may be missing. Try accessing the <a href=":url">EU Cookie Compliance settings page</a> and re-save the form.', [':url' => Url::fromRoute('eu_cookie_compliance.settings')->toString()]));
     }
   }
   // Add inline javascript.
   $disabled_javascripts = $config->get('disabled_javascripts');
   // Initialize a variable to keep libraries to we wish to disable.
   $libraries_to_disable = [];
+
   if ($disabled_javascripts != '') {
     $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
     $disabled_javascripts = array_filter($disabled_javascripts, 'strlen');
@@ -263,7 +257,6 @@ function eu_cookie_compliance_page_attachments(&$variables) {
 
       // Store the actual script name, since we will need it later.
       $disabled_javascripts[$key] = $script;
-
     }
   }
 
@@ -836,10 +829,32 @@ function eu_cookie_compliance_user_in_eu() {
  * Implements hook_js_alter().
  */
 function eu_cookie_compliance_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  if (empty($javascript)) {
+    return;
+  }
+
   $config = \Drupal::config('eu_cookie_compliance.settings');
   $disabled_javascripts = $config->get('disabled_javascripts');
   $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
-  
+
+  $disabled_javascripts = array_filter($disabled_javascripts, function ($js) use ($javascript) {
+    // Decode first, to normalize:
+    $script_name = urldecode($js);
+
+    // Remove category prefix if present
+    if (strpos($script_name, ':') !== false) {
+      $script_name = substr($script_name, strpos($script_name, ':') + 1);
+    }
+
+    // Remove behavior attach name suffix if present
+    if (strpos($script_name, '|') !== false) {
+      $script_name = substr($script_name, 0, strpos($script_name, '|'));
+    }
+
+    return isset($javascript[$script_name]);
+  });
+
+
   $exclude_paths_value = $config->get('exclude_paths');
   $exclude_paths = !is_null($exclude_paths_value) ? explode(PHP_EOL, $exclude_paths_value) : [];
   $current_path = \Drupal::service('path.current')->getPath();
@@ -893,6 +908,52 @@ function eu_cookie_compliance_js_alter(&$javascript, AttachedAssetsInterface $as
 
 }
 
+
+/**
+ * Collects all JS from the library and html_head attachments.
+ *
+ * @param array $attachments
+ *   The render array attachments, ie $attachments['#attached'].
+ *
+ * @return array
+ *   An array of JavaScript file paths (external URLs or relative paths).
+ */
+function _eu_cookie_compliance_collect_js(array $attachments): array {
+  $all_js = [];
+
+  // Process modules attaching via library
+  if (!empty($attachments['library'])) {
+    $library_discovery = \Drupal::service('library.discovery');
+    foreach ($attachments['library'] as $library) {
+      [$extension, $name] = explode('/', $library);
+      $lib = $library_discovery->getLibraryByName($extension, $name);
+      if (!empty($lib['js'])) {
+        foreach ($lib['js'] as $js) {
+          $all_js[] = $js['data'];
+        }
+      }
+    }
+  }
+
+  // Some modules attach via the html_head, process those scripts
+  if (!empty($attachments['html_head'])) {
+    foreach ($attachments['html_head'] as $item) {
+      $element = $item[0];
+      if (!empty($element['#tag']) && $element['#tag'] === 'script') {
+        $src = $element['#attributes']['src'] ?? null;
+        if ($src) {
+          // Strip query string if present
+          $src = strtok($src, '?');
+          _eu_cookie_compliance_convert_relative_uri($src);
+          $all_js[] = $src;
+        }
+      }
+    }
+  }
+
+  return $all_js;
+}
+
 /**
  * Implements hook_page_attachments_alter().
  */
@@ -900,6 +961,10 @@ function eu_cookie_compliance_page_attachments_alter(array &$attachments) {
   $config = Drupal::config('eu_cookie_compliance.settings');
   $disabled_javascripts = $config->get('disabled_javascripts');
   $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
+
+  /* Get the unverified scripts that may not exist on a page */
+  $unverified_scripts = [];
+  $all_js = _eu_cookie_compliance_collect_js($attachments['#attached']);
 
   foreach ($disabled_javascripts as $script) {
     // Remove 'category:' if present.
@@ -917,9 +982,16 @@ function eu_cookie_compliance_page_attachments_alter(array &$attachments) {
     if (strpos($script, '%7C') !== FALSE) {
       @list($script) = explode('%7C', $script);
     }
+
+    // Avoid the prefix of a '/'
+    $original_script = $script;
     if (!UrlHelper::isExternal($script)) {
       _eu_cookie_compliance_convert_relative_uri($script);
       $script = '/' . $script;
+    }
+
+    if (!in_array($original_script, $all_js)) {
+      $unverified_scripts[] = $script;
     }
 
     if (!empty($attachments['#attached']['html_head'])) {
@@ -943,6 +1015,8 @@ function eu_cookie_compliance_page_attachments_alter(array &$attachments) {
       }
     }
   }
+
+  $attachments['#attached']['drupalSettings']['eu_cookie_compliance']['unverified_scripts'] = $unverified_scripts;
 }
 
 /**
@@ -978,11 +1052,12 @@ function eu_cookie_compliance_module_set_weight() {
   // Allow other modules to exclude themselves.
   \Drupal::moduleHandler()->alter('eu_cookie_compliance_module_weight_exclude', $exclude_modules);
 
-  $extension_config = \Drupal::configFactory()->get('core.extension');
+  $installed_modules = \Drupal::service('extension.list.module')->getAllInstalledInfo();
+  $modules_weight = \Drupal::configFactory()->get('core.extension')->get('module');
   // Loop through all installed modules to find the highest weight.
-  foreach ($extension_config->get('module') as $module_name => $module_weight) {
-    if ($module_weight > $weight && !in_array($module_name, $exclude_modules)) {
-      $weight = $module_weight + 1;
+  foreach ($installed_modules as $filename => $module_info) {
+    if (!isset($module_info['hidden']) && $modules_weight[$filename] > $weight && !in_array($filename, $exclude_modules)) {
+      $weight = $modules_weight[$filename] + 1;
     }
   }
   module_set_weight('eu_cookie_compliance', $weight);
