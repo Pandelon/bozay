@@ -17,10 +17,11 @@
     "require": {
         "composer/installers": "^2.3",
         "drupal/admin_toolbar": "^3.4",
+        "drupal/automatic_updates": "^4.1",
         "drupal/back_to_top": "^3.0",
         "drupal/backup_migrate": "^5.0",
         "drupal/body_node_id_class": "^2.0",
-            "drupal/bootstrap5": "^4.0",
+        "drupal/bootstrap5": "^4.0",
         "drupal/colorbox": "^2.2",
         "drupal/core": "^11.3.5",
         "drupal/core-composer-scaffold": "^11.3.5",

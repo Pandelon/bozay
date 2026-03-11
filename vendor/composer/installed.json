@@ -1089,6 +1089,117 @@
             "install-path": "../../web/modules/contrib/admin_toolbar"
         },
         {
+            "name": "drupal/automatic_updates",
+            "version": "4.1.0",
+            "version_normalized": "4.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/automatic_updates.git",
+                "reference": "4.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/automatic_updates-4.1.0.zip",
+                "reference": "4.1.0",
+                "shasum": "f6a84fd946cb24d151c2436e7b6a8ef5508f14ae"
+            },
+            "require": {
+                "composer-runtime-api": "^2.1",
+                "drupal/core": "^11.2",
+                "ext-json": "*",
+                "symfony/console": "^6.2 || ^7"
+            },
+            "conflict": {
+                "php-tuf/composer-integration": "<1-alpha11"
+            },
+            "require-dev": {
+                "colinodell/psr-testlogger": "^1.2",
+                "symfony/config": "^6.2 || ^7"
+            },
+            "bin": [
+                "auto-update"
+            ],
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "4.1.0",
+                    "datestamp": "1768871257",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\automatic_updates\\Development\\": "scripts/src"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "scripts": {
+                "phpcbf": [
+                    "scripts/phpcbf.sh"
+                ],
+                "phpcs": [
+                    "scripts/phpcs.sh"
+                ],
+                "test": [
+                    "Composer\\Config::disableProcessTimeout",
+                    "scripts/phpunit.sh"
+                ],
+                "core-convert": [
+                    "Drupal\\automatic_updates\\Development\\ConverterCommand"
+                ],
+                "core-commit": [
+                    "Drupal\\automatic_updates\\Development\\ConverterCommand::makeCommit"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "catch",
+                    "homepage": "https://www.drupal.org/user/35733"
+                },
+                {
+                    "name": "drumm",
+                    "homepage": "https://www.drupal.org/user/3064"
+                },
+                {
+                    "name": "hestenet",
+                    "homepage": "https://www.drupal.org/user/54034"
+                },
+                {
+                    "name": "mlhess",
+                    "homepage": "https://www.drupal.org/user/102818"
+                },
+                {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
+                    "name": "tedbow",
+                    "homepage": "https://www.drupal.org/user/240860"
+                },
+                {
+                    "name": "xjm",
+                    "homepage": "https://www.drupal.org/user/65776"
+                }
+            ],
+            "description": "Drupal Automatic Updates",
+            "homepage": "https://www.drupal.org/project/automatic_updates",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/automatic_updates",
+                "issues": "https://www.drupal.org/project/issues/automatic_updates"
+            },
+            "install-path": "../../web/modules/contrib/automatic_updates"
+        },
+        {
             "name": "drupal/back_to_top",
             "version": "3.0.3",
             "version_normalized": "3.0.3.0",
@@ -1279,63 +1390,6 @@
                 "source": "https://git.drupalcode.org/project/body_node_id_class"
             },
             "install-path": "../../web/modules/contrib/body_node_id_class"
-        },
-        {
-            "name": "drupal/bootstrap4",
-            "version": "3.0.7",
-            "version_normalized": "3.0.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/bootstrap4.git",
-                "reference": "3.0.7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/bootstrap4-3.0.7.zip",
-                "reference": "3.0.7",
-                "shasum": "c4989d6fe4b0d33a07c47f4a7bad976a9ced30c3"
-            },
-            "require": {
-                "drupal/core": "^10.2 || ^11"
-            },
-            "type": "drupal-theme",
-            "extra": {
-                "drupal": {
-                    "version": "3.0.7",
-                    "datestamp": "1767794815",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "installation-source": "dist",
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Janna M (jannakha)",
-                    "homepage": "https://www.drupal.org/u/jannakha",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "Vladimir Roudakov (vladimiraus)",
-                    "homepage": "https://www.drupal.org/u/vladimiraus",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "Master theme using Bootstrap 4: powerful front-end framework for faster and easier web development.",
-            "homepage": "https://www.drupal.org/project/bootstrap4",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "https://git.drupalcode.org/project/bootstrap4",
-                "issues": "https://www.drupal.org/project/issues/bootstrap4"
-            },
-            "install-path": "../../web/themes/contrib/bootstrap4"
         },
         {
             "name": "drupal/bootstrap5",
