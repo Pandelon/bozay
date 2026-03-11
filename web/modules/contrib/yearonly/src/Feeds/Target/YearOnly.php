@@ -20,11 +20,12 @@ class YearOnly extends FieldTargetBase {
    * {@inheritdoc}
    */
   protected static function prepareTarget(FieldDefinitionInterface $field_definition) {
-   $definition = FieldTargetDefinition::createFromFieldDefinition($field_definition);
-   if ($field_definition->getType() === 'yearonly') {
-     $definition
-       ->addProperty('value');
+    $definition = FieldTargetDefinition::createFromFieldDefinition($field_definition);
+    if ($field_definition->getType() === 'yearonly') {
+      $definition
+        ->addProperty('value');
     }
     return $definition;
   }
+
 }

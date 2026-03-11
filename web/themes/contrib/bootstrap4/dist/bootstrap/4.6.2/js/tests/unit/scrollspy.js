@@ -298,6 +298,7 @@ $(function () {
 
     var done = assert.async()
     var testElementIsActiveAfterScroll = function (element, target) {
+      // JQuery 4 update - Deferred only availabe in FULL build (not slim build)
       var deferred = $.Deferred()
       // add top padding to fix Chrome on Android failures
       var paddingTop = 5

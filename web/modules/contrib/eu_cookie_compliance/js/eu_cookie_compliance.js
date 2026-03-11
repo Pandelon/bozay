@@ -681,6 +681,12 @@
       nextStatus = cookieValueAgreed;
     }
 
+    /* Necessary to keep the euCookieComplianceLoadScripts() load order consistent on page load. */
+    if (!euCookieComplianceHasLoadedScripts && typeof euCookieComplianceLoadScripts === "function") {
+      euCookieComplianceLoadScripts();
+    }
+    euCookieComplianceHasLoadedScripts = true;
+
     Drupal.eu_cookie_compliance.setAcceptedCategories(categories);
     // Load scripts for all categories. If no categories selected, none
     // will be loaded.

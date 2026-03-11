@@ -1,5 +1,5 @@
 bootstrap4.settings:
-  type: config_object
+  type: theme_settings
   label: 'Bootstrap 4 theme settings'
   mapping:
     b4_body_schema:
@@ -26,3 +26,12 @@ bootstrap4.settings:
     b4_top_container_config:
       type: string
       label: 'Website container type configuration'
+    subtheme_folder:
+      type: text
+      label: 'subtheme_folder'
+    subtheme_name:
+      type: text
+      label: 'subtheme_name'
+    subtheme_machine_name:
+      type: text
+      label: 'subtheme_machine_name'

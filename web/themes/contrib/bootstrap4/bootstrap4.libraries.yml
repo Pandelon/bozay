@@ -105,9 +105,9 @@ user:
         weight: -10
 
 bootstrap4-js-latest:
-  version: 4.6.2
+  version: 4.6.2.1
   js:
-    dist/bootstrap/4.6.2/dist/js/bootstrap.bundle.js: { minified: true }
+    dist/bootstrap/4.6.2/dist/js/bootstrap.bundle.min.js: { minified: true }
   dependencies:
     - core/jquery
 

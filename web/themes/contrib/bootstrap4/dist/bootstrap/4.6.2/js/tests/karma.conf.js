@@ -11,7 +11,7 @@ const BUNDLE = Boolean(process.env.BUNDLE)
 const BROWSERSTACK = Boolean(process.env.BROWSERSTACK)
 const JQUERY_FILE = USE_OLD_JQUERY ?
   'https://cdn.jsdelivr.net/npm/jquery@1.9.1/jquery.min.js' :
-  'node_modules/jquery/dist/jquery.slim.min.js'
+  'node_modules/jquery/dist/jquery.min.js'
 
 const frameworks = [
   'qunit',

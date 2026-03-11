@@ -1,7 +1,7 @@
 name: Bootstrap4
 type: theme
 description: 'Theme with Bootstrap 4 css library'
-core_version_requirement: ^10.2 || ^11.0
+core_version_requirement: ^10.2 || ^11
 'base theme': stable9
 starterkit: true
 generator: 'starterkit_theme:10.0.5'
@@ -41,7 +41,7 @@ regions:
   sidebar_second: 'Sidebar second'
   footer: Footer
 
-# Information added by Drupal.org packaging script on 2024-08-30
-version: '3.0.6'
+# Information added by Drupal.org packaging script on 2026-01-07
+version: '3.0.7'
 project: 'bootstrap4'
-datestamp: 1725013836
+datestamp: 1767794818

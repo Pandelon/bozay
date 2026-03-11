@@ -9,6 +9,20 @@ field.field_settings.yearonly:
       type: string
       label: 'End year'
 
+field.value.yearonly:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    default_type:
+      type: string
+      label: 'Default year type'
+    default_relative:
+      type: string
+      label: 'Relative default year'
+    default_specific:
+      type: string
+      label: 'Specific default year'
+
 field.widget.settings.yearonly_default:
   type: mapping
   label: 'Year Only select list widget settings'

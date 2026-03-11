@@ -9,6 +9,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\StatusMessages;
 
 /**
  * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
@@ -315,7 +316,6 @@ function bootstrap4_form_system_theme_settings_subtheme_submit($form, FormStateI
           'recurse' => FALSE,
         ]);
       foreach ($files as $file) {
-        //dump($file);
         $fileName = $file->filename;
         $fs->copy(
           \Drupal::service('extension.list.theme')->getPath('bootstrap4') . DIRECTORY_SEPARATOR . $subforder . DIRECTORY_SEPARATOR . $fileName,
@@ -349,7 +349,7 @@ function bootstrap4_form_system_theme_settings_subtheme_submit($form, FormStateI
         '',
         '/**',
         ' * @file',
-        ' * ' . $themeName .' theme file.',
+        ' * ' . $themeName . ' theme file.',
         ' */',
         '',
       ],
@@ -533,4 +533,12 @@ function bootstrap4_preprocess_views_ui_display_tab_setting(&$variables) {
 function bootstrap4_preprocess_views_ui_display_tab_bucket(&$variables) {
   bootstrap4_covert_classes_string_to_array($variables);
   $variables['attributes']['class'][] = 'my-2';
+}
+
+/**
+ * Implements theme_preprocess_block__system_messages_block().
+ */
+function bootstrap4_preprocess_block__system_messages_block(&$variables) {
+  $variables['content'] = StatusMessages::renderMessages();
+  $variables['#cache']['max-age'] = 0;
 }

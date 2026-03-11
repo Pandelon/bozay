@@ -1,0 +1,5 @@
+parameters:
+  ignoreErrors:
+    -
+      message: "#Method Drupal\\\\yearonly\\\\Plugin\\\\Field\\\\FieldType\\\\YearOnlyFieldItemList::defaultValuesForm\\(\\) should return array but return statement is missing#"
+      path: src/Plugin/Field/FieldType/YearOnlyFieldItemList.php

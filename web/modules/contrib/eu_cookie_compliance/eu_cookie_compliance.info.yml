@@ -7,7 +7,7 @@ configure: eu_cookie_compliance.settings
 dependencies:
   - drupal:filter
 
-# Information added by Drupal.org packaging script on 2025-07-24
-version: '8.x-1.28'
+# Information added by Drupal.org packaging script on 2025-10-17
+version: '8.x-1.29'
 project: 'eu_cookie_compliance'
-datestamp: 1753332677
+datestamp: 1760671056

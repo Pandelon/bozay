@@ -3,9 +3,10 @@
 namespace Drupal\yearonly\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Field\WidgetInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\yearonly\Plugin\Field\FieldType\YearOnlyItem;
 
 /**
  * Plugin implementation of the 'yearonly_default' widget.
@@ -61,9 +62,15 @@ class YearOnlyDefaultWidget extends WidgetBase implements WidgetInterface {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $settings = $this->getFieldSettings();
 
-    $yearonly_from = $this->getFieldSetting('yearonly_from') ?: 0;
-    $yearonly_to = $this->getFieldSetting('yearonly_to') ?: 0;
+    $yearonly_from = $settings['yearonly_from'] ?: 0;
+    $yearonly_to = $settings['yearonly_to'] ?: 0;
+
+    $element['#description'] = $this->t('Select a year from @min to @max.', [
+      '@min' => $yearonly_from,
+      '@max' => $yearonly_to,
+    ]);
 
     if ($yearonly_to == 'now') {
       $yearonly_to = date('Y');
@@ -72,8 +79,7 @@ class YearOnlyDefaultWidget extends WidgetBase implements WidgetInterface {
     $yearonly_from = (int) $yearonly_from;
     $yearonly_to = (int) $yearonly_to;
 
-    if($yearonly_from > $yearonly_to)
-    {
+    if ($yearonly_from > $yearonly_to) {
       $yearonly_from = $yearonly_to;
     }
 
@@ -93,7 +99,18 @@ class YearOnlyDefaultWidget extends WidgetBase implements WidgetInterface {
       '#default_value' => $items[$delta]->value ?? '',
       '#description' => $this->t('Select year'),
     ];
+
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFieldSettings() {
+    $settings = $this->fieldDefinition->getSettings();
+
+    $settings['yearonly_to'] = YearOnlyItem::calculateYear($settings['yearonly_to']);
+    return $settings;
   }
 
   /**

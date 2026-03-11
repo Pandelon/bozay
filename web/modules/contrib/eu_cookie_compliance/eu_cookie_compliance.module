@@ -54,8 +54,9 @@ function eu_cookie_compliance_help($route_name, RouteMatchInterface $route_match
  */
 function eu_cookie_compliance_module_implements_alter(&$implementations, $hook) {
   switch ($hook) {
-    case 'page_attachments':
     case 'js_alter':
+    case 'page_attachments':
+    case 'page_attachments_alter':
       // Ensure that the module is the last one to be run.
       // Avoids edge cases where a script is added after the module alters the scripts.
       $group = $implementations['eu_cookie_compliance'];
@@ -230,35 +231,6 @@ function eu_cookie_compliance_page_attachments(&$variables) {
         ->addError(t('Could not read the EU Cookie Compliance JavaScript file that is used to handle disabled scripts. There may be a problem with your file system or the file may be missing. Try accessing the <a href=":url">EU Cookie Compliance settings page</a> and re-save the form.', [':url' => Url::fromRoute('eu_cookie_compliance.settings')->toString()]));
     }
   }
-  // Add inline javascript.
-  $disabled_javascripts = $config->get('disabled_javascripts');
-  // Initialize a variable to keep libraries to we wish to disable.
-  $libraries_to_disable = [];
-
-  if ($disabled_javascripts != '') {
-    $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
-    $disabled_javascripts = array_filter($disabled_javascripts, 'strlen');
-
-    foreach ($disabled_javascripts as $key => $script) {
-      $parts = explode('%3A', $script);
-      if (count($parts) > 1) {
-        $script = implode(':', $parts);
-      }
-
-      if (strpos($script, '%7C') !== FALSE) {
-        // Swallow a notice in case there are no behavior or library names.
-        @list($script, $attach_name, $library_name) = explode('%7C', $script);
-
-        // Store the library name.
-        if ($library_name) {
-          $libraries_to_disable[] = $library_name;
-        }
-      }
-
-      // Store the actual script name, since we will need it later.
-      $disabled_javascripts[$key] = $script;
-    }
-  }
 
   // Add inline css.
   if (!empty($data['css'])) {
@@ -274,45 +246,6 @@ function eu_cookie_compliance_page_attachments(&$variables) {
   $variables['#cache']['tags'] = Cache::mergeTags($cache_tags, $config->getCacheTags());
   $category_cache_tags = \Drupal::entityTypeManager()->getStorage('cookie_category')->getEntityType()->getListCacheTags();
   $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache']['tags'], $category_cache_tags);
-
-  if (!empty($disabled_javascripts)) {
-    // Check if disabled scripts are in page html_head.
-    $disabled_javascripts = array_filter($disabled_javascripts);
-    foreach ($disabled_javascripts as $key => $script) {
-      // Files in the public folder need the URI adjusted.
-      if (strpos($script, 'sites') === 0) {
-        $disabled_javascripts[$key] = preg_replace('/\.js\?[^"]+/', '.js', $script);
-        $disabled_javascripts[$key] = preg_replace('/\.js%3F[^"]+/', '.js', $script);
-      }
-      if (strpos($script, 'http') !== 0 && strpos($script, '//') !== 0 && strpos($script, 'sites/') === 0) {
-        $disabled_javascripts[$key] = '/' . $disabled_javascripts[$key];
-      }
-    }
-
-    foreach ($variables['#attached']['html_head'] as $index => $asset) {
-      $is_script = !empty($asset[0]['#type']) && $asset[0]['#type'] === 'html_tag' && $asset[0]['#tag'] === 'script';
-      $is_src = !empty($asset[0]['#attributes']['src']);
-      if (!$is_script || !$is_src) {
-        continue;
-      }
-      $src = $asset[0]['#attributes']['src'];
-      $src = preg_replace('/\.js\?[^"]+/', '.js', $src);
-      $src = preg_replace('/^\//', '', $src);
-      if (strpos($src, 'http') !== 0 && strpos($src, '//') !== 0) {
-        $src = '/' . $src;
-      }
-      if (in_array($src, $disabled_javascripts)) {
-        $variables['#attached']['html_head'][$index][0]['#access'] = FALSE;
-      }
-    }
-
-    // Remove libraries if they match the ones that we want to exclude.
-    foreach ($variables['#attached']['library'] as $index => $library) {
-      if (in_array($library, $libraries_to_disable)) {
-        unset($variables['#attached']['library'][$index]);
-      }
-    }
-  }
 }
 
 /**
@@ -834,26 +767,6 @@ function eu_cookie_compliance_js_alter(&$javascript, AttachedAssetsInterface $as
   }
 
   $config = \Drupal::config('eu_cookie_compliance.settings');
-  $disabled_javascripts = $config->get('disabled_javascripts');
-  $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
-
-  $disabled_javascripts = array_filter($disabled_javascripts, function ($js) use ($javascript) {
-    // Decode first, to normalize:
-    $script_name = urldecode($js);
-
-    // Remove category prefix if present
-    if (strpos($script_name, ':') !== false) {
-      $script_name = substr($script_name, strpos($script_name, ':') + 1);
-    }
-
-    // Remove behavior attach name suffix if present
-    if (strpos($script_name, '|') !== false) {
-      $script_name = substr($script_name, 0, strpos($script_name, '|'));
-    }
-
-    return isset($javascript[$script_name]);
-  });
-
 
   $exclude_paths_value = $config->get('exclude_paths');
   $exclude_paths = !is_null($exclude_paths_value) ? explode(PHP_EOL, $exclude_paths_value) : [];
@@ -886,72 +799,28 @@ function eu_cookie_compliance_js_alter(&$javascript, AttachedAssetsInterface $as
   }
 
   if ($path_is_excluded === FALSE) {
-    foreach ($disabled_javascripts as $script) {
-      // Remove 'category:' if present.
-      $parts = explode('%3A', $script);
-      if (count($parts) > 2) {
-        array_shift($parts);
-        $script = implode(':', $parts);
-      }
-      else {
-        $script = end($parts);
-      }
-      // Parse the string and drop the parameter that is a behavior name.
-      if (strpos($script, '%7C') !== FALSE) {
-        @list($script) = explode('%7C', $script);
-      }
-      _eu_cookie_compliance_convert_relative_uri($script);
+    $disabled_scripts = $config->get('disabled_javascripts');
+    $js_manager = \Drupal::service('eu_cookie_compliance.disabled_javascript_manager');
+    $disabled_items = $js_manager->parse($disabled_scripts);
 
-      unset($javascript[$script]);
+    foreach ($disabled_items['disabled_js'] as $disabled_javascript) {
+      $script_name = $disabled_javascript['script'];
+      unset($javascript[$script_name]);
     }
-  }
 
-}
-
-
-/**
- * Collects all JS from the library and html_head attachments.
- *
- * @param array $attachments
- *   The render array attachments, ie $attachments['#attached'].
- *
- * @return array
- *   An array of JavaScript file paths (external URLs or relative paths).
- */
-function _eu_cookie_compliance_collect_js(array $attachments): array {
-  $all_js = [];
-
-  // Process modules attaching via library
-  if (!empty($attachments['library'])) {
-    $library_discovery = \Drupal::service('library.discovery');
-    foreach ($attachments['library'] as $library) {
-      [$extension, $name] = explode('/', $library);
-      $lib = $library_discovery->getLibraryByName($extension, $name);
-      if (!empty($lib['js'])) {
-        foreach ($lib['js'] as $js) {
-          $all_js[] = $js['data'];
+    if ($disabled_items['disabled_libraries']) {
+      // Remove libraries if they match the ones that we want to exclude.
+      $libraries = $assets->getLibraries();
+      foreach ($disabled_items['disabled_libraries'] as $disabled_library) {
+        $index = array_search($disabled_library, $libraries, TRUE);
+        if ($index !== FALSE) {
+          unset($libraries[$index]);
         }
       }
+      $assets->setLibraries($libraries);
     }
   }
 
-  // Some modules attach via the html_head, process those scripts
-  if (!empty($attachments['html_head'])) {
-    foreach ($attachments['html_head'] as $item) {
-      $element = $item[0];
-      if (!empty($element['#tag']) && $element['#tag'] === 'script') {
-        $src = $element['#attributes']['src'] ?? null;
-        if ($src) {
-          // Strip query string if present
-          $src = strtok($src, '?');
-          _eu_cookie_compliance_convert_relative_uri($src);
-          $all_js[] = $src;
-        }
-      }
-    }
-  }
-
-  return $all_js;
 }
 
 /**
@@ -959,34 +828,21 @@ function _eu_cookie_compliance_collect_js(array $attachments): array {
  */
 function eu_cookie_compliance_page_attachments_alter(array &$attachments) {
   $config = Drupal::config('eu_cookie_compliance.settings');
-  $disabled_javascripts = $config->get('disabled_javascripts');
-  $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
+  $disabled_scripts = $config->get('disabled_javascripts');
 
   /* Get the unverified scripts that may not exist on a page */
   $unverified_scripts = [];
-  $all_js = _eu_cookie_compliance_collect_js($attachments['#attached']);
+  $js_manager = \Drupal::service('eu_cookie_compliance.disabled_javascript_manager');
 
-  foreach ($disabled_javascripts as $script) {
-    // Remove 'category:' if present.
-    $parts = explode('%3A', $script);
-    // The script can use filesystem stream wrappers, so considerate them.
-    if (count($parts) > 2) {
-      array_shift($parts);
-      $script = implode(':', $parts);
-    }
-    else {
-      $script = end($parts);
-    }
+  $all_js = $js_manager->collect_js($attachments['#attached']);
+  $disabled_items = $js_manager->parse($disabled_scripts);
 
-    // Parse the string and drop the parameter that is a behavior name.
-    if (strpos($script, '%7C') !== FALSE) {
-      @list($script) = explode('%7C', $script);
-    }
+  foreach ($disabled_items['disabled_js'] as $disabled_javascript) {
+    $script = $disabled_javascript['script'];
 
     // Avoid the prefix of a '/'
     $original_script = $script;
     if (!UrlHelper::isExternal($script)) {
-      _eu_cookie_compliance_convert_relative_uri($script);
       $script = '/' . $script;
     }
 
@@ -1016,29 +872,15 @@ function eu_cookie_compliance_page_attachments_alter(array &$attachments) {
     }
   }
 
+  // Remove libraries if they match the ones that we want to exclude.
+  foreach ($disabled_items['disabled_libraries'] as $disabled_library) {
+    $index = array_search($disabled_library, $attachments['#attached']['library'], TRUE);
+    if ($index !== FALSE) {
+      unset($attachments['#attached']['library'][$index]);
+    }
+  }
+
   $attachments['#attached']['drupalSettings']['eu_cookie_compliance']['unverified_scripts'] = $unverified_scripts;
-}
-
-/**
- * Splits a return delimited text string into an array.
- *
- * @param string $text
- *   Text to split.
- *
- * @return array
- *   Text split into an array.
- */
-function _eu_cookie_compliance_explode_multiple_lines($text) {
-  $text = explode("\r\n", $text ?? "");
-  if (count($text) == 1) {
-    $text = explode("\r", $text[0]);
-  }
-  if (count($text) == 1) {
-    $text = explode("\n", $text[0]);
-  }
-
-  array_walk($text, '_eu_cookie_compliance_convert_relative_uri');
-  return $text;
 }
 
 /**
@@ -1061,24 +903,6 @@ function eu_cookie_compliance_module_set_weight() {
     }
   }
   module_set_weight('eu_cookie_compliance', $weight);
-}
-
-/**
- * Convert uri to relative path.
- *
- * Example public://file.js to /sites/default/files/file.js.
- *
- * @param string $element
- *   Url to transform.
- */
-function _eu_cookie_compliance_convert_relative_uri(&$element) {
-  if ((float) \Drupal::VERSION < 9.3) {
-    $element = preg_replace('/^\//', '', file_url_transform_relative(file_create_url($element)));
-  }
-  else {
-    $url = \Drupal::service('file_url_generator')->generateString($element);
-    $element = preg_replace('/^\//', '', $url);
-  }
 }
 
 /**

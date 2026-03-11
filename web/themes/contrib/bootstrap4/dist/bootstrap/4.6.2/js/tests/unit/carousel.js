@@ -472,10 +472,11 @@ $(function () {
     assert.strictEqual($carousel.data('bs.carousel')._config.interval, 1814, 'attributes should be read only on initialization')
     $carousel.remove()
 
-    $carousel.attr('data-interval', false)
+    // JQuery 4 doesn't set attrs to FALSE
+    $carousel.attr('data-interval', 1500)
     $carousel.appendTo('body')
     $carousel.bootstrapCarousel(1)
-    assert.false($carousel.data('bs.carousel')._config.interval, 'data attribute has higher priority than default options')
+    assert.strictEqual($carousel.data('bs.carousel')._config.interval, 1500, 'data attribute has higher priority than default options')
     $carousel.remove()
   })
 

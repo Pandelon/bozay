@@ -26,3 +26,46 @@ function yearonly_update_9001() {
     $entity_definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
   }
 }
+
+/**
+ * Update config to provide back-compatibility with #3188139 and #3035638.
+ */
+function yearonly_update_9002() {
+  $storage = \Drupal::entityTypeManager()->getStorage('field_config');
+
+  $fieldsConfig = $storage->loadByProperties([
+    'field_type' => 'yearonly',
+  ]);
+
+  foreach ($fieldsConfig as $fieldConfig) {
+    $settings = $fieldConfig->get('settings') ?: [];
+
+    $resave = FALSE;
+
+    // Adjust config from #3188139.
+    if (isset($settings['yearonly_substract'])) {
+      if ($settings['yearonly_substract']) {
+        $settings['yearonly_to'] = '-' . $settings['yearonly_substract'] . ' years';
+      }
+
+      unset($settings['yearonly_substract']);
+      $resave = TRUE;
+    }
+
+    // Adjust config from #3035638.
+    if (isset($settings['yearonly_extra'])) {
+      if ($settings['yearonly_extra']) {
+        $settings['yearonly_to'] = '+' . $settings['yearonly_extra'] . ' years';
+      }
+
+      unset($settings['yearonly_extra']);
+      $resave = TRUE;
+    }
+
+    $fieldConfig->set('settings', $settings);
+
+    if ($resave) {
+      $fieldConfig->save();
+    }
+  }
+}
