@@ -30,7 +30,7 @@
     node_type ? 'page-node-type-' ~ node_type|clean_class,
     db_offline ? 'db-offline',
     (b4_body_schema == 'light' ? ' text-dark' : (b4_body_schema == 'dark' ? ' text-light' :  ' ')),
-    (b4_body_bg_schema != 'none' ? " bg-#{b4_body_bg_schema}" : ' '),
+    (b4_body_bg_schema != 'none' ? " bg-#{b5_body_bg_schema}" : ' '),
     'd-flex flex-column h-100',
     language ? 'lang-' ~ language|clean_class
   ]

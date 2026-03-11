@@ -1,8 +1,8 @@
 name: Bozay
 type: theme
-description: 'Bozay subtheme based on Bootstrap 4 theme.'
-core_version_requirement: '^10'
-'base theme': bootstrap4
+description: 'Bozay subtheme based on Bootstrap 5 theme.'
+core_version_requirement: '^10 | ^11'
+'base theme': bootstrap5
 libraries:
   - bozay/global-styling
 stylesheets-remove:

@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ContentTranslationJobsViewTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $profile = 'standard';
 
   /**

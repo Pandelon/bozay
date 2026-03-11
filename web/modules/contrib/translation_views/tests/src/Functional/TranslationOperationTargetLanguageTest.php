@@ -18,6 +18,11 @@ use Drupal\views\Tests\ViewTestData;
 class TranslationOperationTargetLanguageTest extends ViewTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * List of the additional language IDs to be created for the tests.
    *
    * @var array

@@ -5,12 +5,16 @@ namespace Drupal\Tests\pathauto\Kernel;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests tokens provided by Pathauto.
  *
  * @group pathauto
  */
+#[Group('pathauto')]
+#[RunTestsInSeparateProcesses]
 class PathautoTokenTest extends KernelTestBase {
 
   /**
@@ -20,6 +24,9 @@ class PathautoTokenTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'token', 'path_alias', 'pathauto'];
 
+  /**
+   * Tests pathauto tokens.
+   */
   public function testPathautoTokens() {
 
     $this->installConfig(['pathauto']);
@@ -35,8 +42,8 @@ class PathautoTokenTest extends KernelTestBase {
     $data['array'] = $array;
     $replacements = $this->assertTokens('array', $data, $tokens);
 
-    // Ensure that the cleanTokenValues() method does not alter this token value.
-    /* @var \Drupal\pathauto\AliasCleanerInterface $alias_cleaner */
+    // Ensure the cleanTokenValues() method does not alter this token value.
+    /** @var \Drupal\pathauto\AliasCleanerInterface $alias_cleaner */
     $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
     $alias_cleaner->cleanTokenValues($replacements, $data, []);
     $this->assertEquals('test-first-arg/array-value', $replacements['[array:join-path]']);
@@ -121,6 +128,18 @@ class PathautoTokenTest extends KernelTestBase {
     return $replacements;
   }
 
+  /**
+   * Maps token names to a specific token format based on the provided type.
+   *
+   * @param string $type
+   *   The type of tokens being mapped (e.g., entity type, category).
+   * @param array $tokens
+   *   An array of token names to map.
+   *
+   * @return array
+   *   An associative array where the keys are the original token names and
+   *   the values are formatted token strings in the pattern "[type:token]".
+   */
   public function mapTokenNames($type, array $tokens = []) {
     $return = [];
     foreach ($tokens as $token) {

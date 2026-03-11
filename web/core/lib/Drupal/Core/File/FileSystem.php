@@ -151,6 +151,11 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function basename($uri, $suffix = NULL) {
+    @trigger_error(
+      "Calling FileSystem::basename() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use PHP native basename() instead. See https://www.drupal.org/node/3530869",
+      E_USER_DEPRECATED,
+    );
+
     $separators = '/';
     if (DIRECTORY_SEPARATOR != '/') {
       // For Windows OS add special separator.
@@ -272,7 +277,7 @@ class FileSystem implements FileSystemInterface {
       $wrapper = $this->streamWrapperManager->getViaScheme($scheme);
 
       if ($filename = tempnam($wrapper->getDirectoryPath(), $prefix)) {
-        return $scheme . '://' . static::basename($filename);
+        return $scheme . '://' . basename($filename);
       }
       else {
         return FALSE;
@@ -289,7 +294,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function copy($source, $destination, /* FileExists */$fileExists = FileExists::Rename) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $this->prepareDestination($source, $destination, $fileExists);
@@ -383,7 +388,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function move($source, $destination, /* FileExists */$fileExists = FileExists::Rename) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $this->prepareDestination($source, $destination, $fileExists);
@@ -444,7 +449,7 @@ class FileSystem implements FileSystemInterface {
    */
   protected function prepareDestination($source, &$destination, /* FileExists */$fileExists) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $original_source = $source;
@@ -461,7 +466,7 @@ class FileSystem implements FileSystemInterface {
     // Prepare the destination directory.
     if ($this->prepareDirectory($destination)) {
       // The destination is already a directory, so append the source basename.
-      $destination = $this->streamWrapperManager->normalizeUri($destination . '/' . $this->basename($source));
+      $destination = $this->streamWrapperManager->normalizeUri($destination . '/' . basename($source));
     }
     else {
       // Perhaps $destination is a dir/file?
@@ -490,7 +495,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function saveData($data, $destination, /* FileExists */$fileExists = FileExists::Rename) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     // Write the data to a temporary file.
@@ -544,10 +549,10 @@ class FileSystem implements FileSystemInterface {
    */
   public function getDestinationFilename($destination, /* FileExists */$fileExists) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
-    $basename = $this->basename($destination);
+    $basename = basename($destination);
     if (!Unicode::validateUtf8($basename)) {
       throw new FileException(sprintf("Invalid filename '%s'", $basename));
     }

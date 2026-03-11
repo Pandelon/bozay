@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asul&family=Oswald&display=swap');
+:root {
+  --boz-1 : hsl(8, 69%, 33%);
+  --boz-2 : hsl(34, 44%, 69%);
+  --boz-3 : hsl(12, 100%, 68%);
+  --boz-4 :     hsl(341, 34%, 26%);
+}
+
+
+
+
+body {
+  font-family: 'Raleways', sans-serif;
+}
+
+a {
+  color: var(--boz-3);
+}
+
+img {
+  max-width:100%;
+}

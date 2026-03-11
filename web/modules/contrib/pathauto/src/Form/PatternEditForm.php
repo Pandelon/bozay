@@ -23,6 +23,8 @@ class PatternEditForm extends EntityForm {
   protected $manager;
 
   /**
+   * The pathauto pattern entity.
+   *
    * @var \Drupal\pathauto\PathautoPatternInterface
    */
   protected $entity;
@@ -109,7 +111,7 @@ class PatternEditForm extends EntityForm {
       '#suffix' => '</div>',
     ];
 
-    // if there is no type yet, stop here.
+    // If there is no type yet, stop here.
     if ($this->entity->getType()) {
 
       $alias_type = $this->entity->getAliasType();
@@ -120,7 +122,7 @@ class PatternEditForm extends EntityForm {
         '#default_value' => $this->entity->getPattern(),
         '#size' => 65,
         '#maxlength' => 1280,
-        '#element_validate' => ['token_element_validate', 'pathauto_pattern_validate'],
+        '#element_validate' => ['token_element_validate', [static::class, 'validatePattern']],
         '#after_build' => ['token_element_validate'],
         '#token_types' => $alias_type->getTokenTypes(),
         '#min_tokens' => 1,
@@ -270,11 +272,12 @@ class PatternEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
+    $save_result = parent::save($form, $form_state);
     $this->messenger()->addMessage($this->t('Pattern %label saved.', [
       '%label' => $this->entity->label(),
     ]));
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+    return $save_result;
   }
 
   /**
@@ -290,6 +293,37 @@ class PatternEditForm extends EntityForm {
   public function submitSelectType(array $form, FormStateInterface $form_state) {
     $this->entity = $this->buildEntity($form, $form_state);
     $form_state->setRebuild();
+  }
+
+  /**
+   * Validate the pattern field.
+   *
+   * Ensure it doesn't contain any characters that are invalid in URLs.
+   */
+  public static function validatePattern($element, FormStateInterface $form_state) {
+
+    if (isset($element['#value'])) {
+      $title = empty($element['#title']) ? $element['#parents'][0] : $element['#title'];
+      $invalid_characters = ['#', '?', '&'];
+      $invalid_characters_used = [];
+
+      foreach ($invalid_characters as $invalid_character) {
+        if (strpos($element['#value'], $invalid_character) !== FALSE) {
+          $invalid_characters_used[] = $invalid_character;
+        }
+      }
+
+      if (!empty($invalid_characters_used)) {
+        $form_state->setError($element, t('The %element-title is using the following invalid characters: @invalid-characters.', [
+          '%element-title' => $title,
+          '@invalid-characters' => implode(', ', $invalid_characters_used),
+        ]));
+      }
+
+    }
+
+    return $element;
+
   }
 
 }

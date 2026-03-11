@@ -8,6 +8,8 @@
 use Drupal\Core\Language\Language;
 
 /**
+ * Provides integration points for modules to integrate with pathauto.
+ *
  * @todo Update for 8.x-1.x
  *
  * It may be helpful to review some examples of integration from

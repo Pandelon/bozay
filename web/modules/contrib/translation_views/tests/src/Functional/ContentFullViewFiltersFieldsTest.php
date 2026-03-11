@@ -16,6 +16,11 @@ class ContentFullViewFiltersFieldsTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'standard';
 
   /**

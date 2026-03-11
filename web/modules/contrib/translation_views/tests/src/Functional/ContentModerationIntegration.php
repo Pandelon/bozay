@@ -17,6 +17,11 @@ use Drupal\workflows\Entity\Workflow;
 class ContentModerationIntegration extends ViewTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * List of the additional language IDs to be created for the tests.
    *
    * @var array
