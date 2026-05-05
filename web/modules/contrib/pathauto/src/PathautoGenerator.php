@@ -203,11 +203,18 @@ class PathautoGenerator implements PathautoGeneratorInterface {
       'source' => $source,
       'data' => $data,
       'bundle' => $entity->bundle(),
+      // @todo Remove the reference on 'language' in 2.0.0.
       'language' => &$langcode,
     ];
     $pattern_original = $pattern->getPattern();
+    $pre_alter_langcode = $langcode;
     $this->moduleHandler->alter('pathauto_pattern', $pattern, $context);
     $pattern_altered = $pattern->getPattern();
+
+    // Detect deprecated language alteration.
+    if ($langcode !== $pre_alter_langcode) {
+      @trigger_error('Altering $context[\'language\'] in hook_pathauto_pattern_alter() is deprecated in pathauto:8.x-1.15 and will be removed in pathauto:2.0.0. See https://www.drupal.org/node/3187945', E_USER_DEPRECATED);
+    }
 
     // Special handling when updating an item which is already aliased.
     $existing_alias = NULL;
@@ -244,10 +251,23 @@ class PathautoGenerator implements PathautoGeneratorInterface {
 
     $alias = $this->aliasCleaner->cleanAlias($alias);
 
+    // Save original values to detect deprecated alterations.
+    $pre_alter_source = $source;
+    $pre_alter_langcode = $langcode;
+
     // Allow other modules to alter the alias.
+    // @todo Remove the reference on 'source' in 2.0.0.
     $context['source'] = &$source;
     $context['pattern'] = $pattern;
     $this->moduleHandler->alter('pathauto_alias', $alias, $context);
+
+    // Detect deprecated source/language alterations.
+    if ($source !== $pre_alter_source) {
+      @trigger_error('Altering $context[\'source\'] in hook_pathauto_alias_alter() is deprecated in pathauto:8.x-1.15 and will be removed in pathauto:2.0.0. Use a custom route or the Safe tokens setting instead. See https://www.drupal.org/node/3187945', E_USER_DEPRECATED);
+    }
+    if ($langcode !== $pre_alter_langcode) {
+      @trigger_error('Altering $context[\'language\'] in hook_pathauto_alias_alter() is deprecated in pathauto:8.x-1.15 and will be removed in pathauto:2.0.0. See https://www.drupal.org/node/3187945', E_USER_DEPRECATED);
+    }
 
     // If we have arrived at an empty string, discontinue.
     if (!mb_strlen($alias)) {
@@ -335,6 +355,9 @@ class PathautoGenerator implements PathautoGeneratorInterface {
               $pattern = clone $pattern;
               $pattern->setPattern($translated);
             }
+          }
+          if ($entity->isNew()) {
+            return $pattern;
           }
           $this->patterns[$entity->getEntityTypeId()][$entity->id()][$langcode] = $pattern;
           break;

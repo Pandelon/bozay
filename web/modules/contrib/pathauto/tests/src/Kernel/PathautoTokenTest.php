@@ -87,6 +87,43 @@ class PathautoTokenTest extends KernelTestBase {
   }
 
   /**
+   * Tests that regex-special chars in safe_tokens don't break cleanTokenValues.
+   *
+   * Adds tokens with regex-special characters (?, -, :) to safe_tokens
+   * and calls cleanTokenValues(). Without preg_quote(), preg_match()
+   * would emit a PHP warning which PHPUnit treats as a test failure.
+   *
+   * @see https://www.drupal.org/project/pathauto/issues/3285655
+   */
+  public function testCleanTokenValuesWithRegexSpecialChars() {
+    $this->installConfig(['pathauto']);
+
+    // Add tokens containing regex-special characters: ? is a
+    // quantifier, - is a range operator, : is used as a delimiter
+    // in the safe_tokens regex pattern.
+    $safe_tokens = $this->config('pathauto.settings')->get('safe_tokens');
+    $safe_tokens[] = '?';
+    $safe_tokens[] = 'url-brief';
+    $safe_tokens[] = 'custom:token';
+    $this->config('pathauto.settings')
+      ->set('safe_tokens', $safe_tokens)
+      ->save();
+
+    $alias_cleaner = $this->container->get('pathauto.alias_cleaner');
+
+    // Without the preg_quote() fix, this triggers a preg_match()
+    // warning that PHPUnit converts to a test failure.
+    $replacements = [
+      '[node:title]' => 'Test title',
+    ];
+    $alias_cleaner->cleanTokenValues($replacements);
+
+    // Verify that non-safe token values are cleaned (lowercased,
+    // hyphenated, etc.).
+    $this->assertEquals('test-title', $replacements['[node:title]']);
+  }
+
+  /**
    * Function copied from TokenTestHelper::assertTokens().
    */
   public function assertTokens($type, array $data, array $tokens, array $options = []) {

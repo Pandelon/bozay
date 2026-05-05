@@ -134,6 +134,13 @@ class PathautoUiTest extends WebDriverTestBase {
       ->load('page_pattern');
     $this->assertSame('/[node:title]', $pattern->getPattern());
 
+    // Capture selection criteria UUIDs to verify they are preserved after
+    // re-saving the pattern via the edit form.
+    // @see https://www.drupal.org/node/2895873
+    $criteria_before = $pattern->get('selection_criteria');
+    $uuids_before = array_keys($criteria_before);
+    $this->assertNotEmpty($uuids_before);
+
     \Drupal::service('pathauto.generator')->resetCaches();
 
     // Create a node with pattern enabled and check if the pattern applies.
@@ -166,6 +173,12 @@ class PathautoUiTest extends WebDriverTestBase {
     $this->assertTrue($this->assertSession()->waitForText('Pattern Test saved.'));
     // Check that the pattern weight did not change.
     $this->assertSession()->optionExists('edit-entities-page-pattern-weight', '4');
+
+    // Verify that selection criteria UUIDs are preserved after re-save.
+    $pattern = PathautoPattern::load('page_pattern');
+    $criteria_after = $pattern->get('selection_criteria');
+    $uuids_after = array_keys($criteria_after);
+    $this->assertEquals($uuids_before, $uuids_after, 'Selection criteria UUIDs are preserved after re-save.');
 
     $this->drupalGet('/admin/config/search/path/patterns/page_pattern/duplicate');
     $session->getPage()->pressButton('Edit');
@@ -226,6 +239,57 @@ class PathautoUiTest extends WebDriverTestBase {
     $this->assertTrue($this->assertSession()->waitForText('The pathauto pattern Test has been deleted.'));
 
     $this->assertEmpty(PathautoPattern::load('page_pattern'));
+  }
+
+  /**
+   * Tests removing bundle conditions via the edit form.
+   *
+   * Verifies that unchecking all bundles on a pattern that previously had
+   * a bundle condition removes that condition entirely, rather than
+   * leaving an empty condition behind. This covers the elseif branch
+   * in PatternEditForm::buildEntity() that calls
+   * removeSelectionCondition().
+   */
+  public function testRemoveConditions() {
+    $session = $this->getSession();
+
+    // Create a pattern with a bundle condition for 'page'.
+    $this->drupalGet('admin/config/search/path/patterns/add');
+    $session->getPage()->selectFieldOption('type', 'canonical_entities:node');
+    $this->assertSession()->assertExpectedAjaxRequest(1);
+
+    $edit = [
+      'bundles[page]' => TRUE,
+      'label' => 'Bundle removal test',
+      'pattern' => '/[node:title]',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->waitForElementVisible('css', '[name="id"]');
+    $this->assertTrue($this->assertSession()->waitForText('Pattern Bundle removal test saved.'));
+
+    // Load the pattern and verify the bundle condition exists.
+    $pattern = PathautoPattern::load('bundle_removal_test');
+    $this->assertNotNull($pattern);
+    $conditions = iterator_to_array($pattern->getSelectionConditions());
+    $this->assertCount(1, $conditions);
+    $condition = reset($conditions);
+    $this->assertStringStartsWith('entity_bundle:', $condition->getPluginId());
+    $this->assertEquals(['page' => 'page'], $condition->getConfiguration()['bundles']);
+
+    // Edit the pattern and uncheck the 'page' bundle.
+    $this->drupalGet('/admin/config/search/path/patterns/bundle_removal_test');
+    $edit = [
+      'bundles[page]' => FALSE,
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertTrue($this->assertSession()->waitForText('Pattern Bundle removal test saved.'));
+
+    // Verify the bundle condition was removed.
+    $pattern = PathautoPattern::load('bundle_removal_test');
+    $this->assertEmpty(
+      iterator_to_array($pattern->getSelectionConditions()),
+      'Bundle condition should be removed.'
+    );
   }
 
 }

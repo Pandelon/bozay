@@ -4,6 +4,7 @@ namespace Drupal\Tests\pathauto\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\Language;
@@ -14,6 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\pathauto\Entity\PathautoPattern;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Drupal\pathauto\PathautoState;
 use Drupal\taxonomy\Entity\Term;
@@ -749,6 +751,92 @@ class PathautoKernelTest extends KernelTestBase {
     // Assert that existing aliases are untouched.
     $this->assertEntityAlias($node1, '/content/first-node');
     $this->assertEntityAlias($node2, '/content/second-node');
+  }
+
+  /**
+   * Tests that selection criteria UUIDs are preserved on form re-save.
+   *
+   * Calls PatternEditForm::buildEntity() with the same bundle selection
+   * to verify that the form updates conditions in place rather than
+   * removing and re-adding them. Without the fix, buildEntity() would
+   * remove+readd the condition, regenerating its UUID on every save.
+   *
+   * @see https://www.drupal.org/node/2895873
+   */
+  public function testSelectionCriteriaUuidPreservedOnSave() {
+    // Create a pattern with a bundle condition.
+    $pattern = $this->createPattern('node', '/content/[node:title]');
+    $this->addBundleCondition($pattern, 'node', 'page');
+    $pattern->save();
+
+    // Record the selection_criteria UUIDs after first save.
+    $pattern = PathautoPattern::load($pattern->id());
+    $criteria_before = $pattern->get('selection_criteria');
+    $this->assertNotEmpty($criteria_before, 'Pattern has selection criteria.');
+    $uuids_before = array_keys($criteria_before);
+
+    // Build the form and call buildEntity() to simulate a form re-save
+    // with the same bundles selected.
+    $form_object = $this->container->get('entity_type.manager')
+      ->getFormObject('pathauto_pattern', 'default');
+    $form_object->setEntity($pattern);
+
+    $form_state = new FormState();
+    $form_state->setValue('bundles', ['page' => 'page']);
+    $form_state->setValue('type', 'canonical_entities:node');
+    $form_state->setValue('pattern', '/content/[node:title]');
+    $form_state->setValue('label', $pattern->label());
+    $form_state->setValue('id', $pattern->id());
+
+    $form = $form_object->buildForm([], $form_state);
+    $entity = $form_object->buildEntity($form, $form_state);
+    $entity->save();
+
+    // Reload and verify UUIDs are preserved.
+    $pattern = PathautoPattern::load($pattern->id());
+    $criteria_after = $pattern->get('selection_criteria');
+    $uuids_after = array_keys($criteria_after);
+
+    $this->assertEquals($uuids_before, $uuids_after, 'Selection criteria UUIDs are preserved after form re-save.');
+  }
+
+  /**
+   * Tests addSelectionCondition generates a new UUID when none is provided.
+   *
+   * @see https://www.drupal.org/node/2895873
+   */
+  public function testSelectionCriteriaNewUuidGenerated() {
+    $pattern = $this->createPattern('node', '/content/[node:title]');
+
+    // Add a condition without specifying a UUID.
+    $uuid = $pattern->addSelectionCondition([
+      'id' => 'entity_bundle:node',
+      'bundles' => ['page' => 'page'],
+      'negate' => FALSE,
+      'context_mapping' => ['node' => 'node'],
+    ]);
+    $pattern->save();
+
+    $this->assertNotEmpty($uuid, 'A UUID was generated for the new condition.');
+
+    // Add a second condition without specifying a UUID.
+    $uuid2 = $pattern->addSelectionCondition([
+      'id' => 'language',
+      'langcodes' => ['en' => 'en'],
+      'negate' => FALSE,
+      'context_mapping' => ['language' => 'language'],
+    ]);
+
+    $this->assertNotEmpty($uuid2, 'A UUID was generated for the second condition.');
+    $this->assertNotEquals($uuid, $uuid2, 'Each condition gets a unique UUID.');
+
+    $pattern->save();
+    $pattern = PathautoPattern::load($pattern->id());
+    $criteria = $pattern->get('selection_criteria');
+    // Verify 'uuid' is not stored inside any condition configuration.
+    foreach ($criteria as $config) {
+      $this->assertArrayNotHasKey('uuid', $config);
+    }
   }
 
   /**

@@ -112,4 +112,23 @@ class PathautoWidget extends PathWidget {
     return $element;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public static function validateFormElement(array &$element, FormStateInterface $form_state) {
+    // Skip alias validation when pathauto will generate the alias on save.
+    // The parent validation checks alias uniqueness against the current value,
+    // but pathauto will regenerate and uniquify the alias during entity save,
+    // making this validation both unnecessary and prone to false positives
+    // (e.g. when translating content, the source language's alias and langcode
+    // are carried over, triggering "alias already in use" for the wrong
+    // language).
+    // @see https://www.drupal.org/i/3267989
+    if (!empty($element['pathauto']['#value'])) {
+      return;
+    }
+
+    parent::validateFormElement($element, $form_state);
+  }
+
 }

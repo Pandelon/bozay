@@ -2,6 +2,7 @@
 
 namespace Drupal\pathauto;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
@@ -200,6 +201,10 @@ class AliasStorageHelper implements AliasStorageHelperInterface {
       $this->database->truncate($table_name)->execute();
     }
     $this->entityTypeManager->getStorage('path_alias')->resetCache();
+
+    // Invalidate all rendered caches and the routing cache since we
+    // just wiped every alias.
+    Cache::invalidateTags(['rendered', 'route_match']);
   }
 
   /**

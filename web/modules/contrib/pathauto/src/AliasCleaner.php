@@ -347,10 +347,12 @@ class AliasCleaner implements AliasCleanerInterface {
    * {@inheritdoc}
    */
   public function cleanTokenValues(&$replacements, $data = [], $options = []) {
+    // Build the safe tokens pattern once outside the loop.
+    $safe_tokens = implode('|', array_map(function ($token) {
+      return preg_quote($token, '/');
+    }, (array) $this->configFactory->get('pathauto.settings')->get('safe_tokens')));
     foreach ($replacements as $token => $value) {
       // Only clean non-path tokens.
-      $config = $this->configFactory->get('pathauto.settings');
-      $safe_tokens = implode('|', (array) $config->get('safe_tokens'));
       if (!preg_match('/(\[|\:)(' . $safe_tokens . ')(:|\]$)/', $token)) {
         $replacements[$token] = $this->cleanString($value, $options);
       }

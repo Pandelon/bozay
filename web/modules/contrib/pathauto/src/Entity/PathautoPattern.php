@@ -469,9 +469,9 @@ class PathautoPattern extends ConfigEntityBase implements PathautoPatternInterfa
    * {@inheritdoc}
    */
   public function addSelectionCondition(array $configuration) {
-    $configuration['uuid'] = $this->uuidGenerator()->generate();
-    $this->getSelectionConditions()->addInstanceId($configuration['uuid'], $configuration);
-    return $configuration['uuid'];
+    $configuration_uuid = $this->uuidGenerator()->generate();
+    $this->getSelectionConditions()->addInstanceId($configuration_uuid, $configuration);
+    return $configuration_uuid;
   }
 
   /**

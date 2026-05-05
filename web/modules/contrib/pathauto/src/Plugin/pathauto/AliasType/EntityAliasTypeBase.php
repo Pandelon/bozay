@@ -2,6 +2,7 @@
 
 namespace Drupal\pathauto\Plugin\pathauto\AliasType;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -204,11 +205,11 @@ class EntityAliasTypeBase extends PluginBase implements AliasTypeInterface, Alia
     $context['sandbox']['count'] += count($ids);
     $context['sandbox']['current'] = !empty($ids) ? max($ids) : 0;
     $context['results']['updates'] += $updates;
-    $context['message'] = $this->t('Updated alias for %label @id.', [
+    $context['message'] = $this->t('Processed @count of @total aliases for %label.', [
+      '@count' => $context['sandbox']['count'],
+      '@total' => $context['sandbox']['total'],
       '%label' => $entity_type->getLabel(),
-      '@id' => end($ids),
     ]);
-
     if ($context['sandbox']['count'] != $context['sandbox']['total']) {
       $context['finished'] = $context['sandbox']['count'] / $context['sandbox']['total'];
     }
@@ -250,6 +251,13 @@ class EntityAliasTypeBase extends PluginBase implements AliasTypeInterface, Alia
     $pids_by_id = $query->execute()->fetchAllKeyed();
 
     PathautoState::bulkDelete($this->getEntityTypeId(), $pids_by_id);
+
+    // Invalidate entity render caches and the routing cache so pages
+    // reflect the removed aliases.
+    $cache_tags = Cache::buildTags($this->getEntityTypeId(), array_keys($pids_by_id));
+    $cache_tags[] = 'route_match';
+    Cache::invalidateTags($cache_tags);
+
     $context['sandbox']['count'] += count($pids_by_id);
     $context['sandbox']['current'] = !empty($pids_by_id) ? max($pids_by_id) : 0;
     $context['results']['deletions'][] = $this->getLabel();
@@ -283,6 +291,7 @@ class EntityAliasTypeBase extends PluginBase implements AliasTypeInterface, Alia
   protected function bulkUpdate(array $ids, array $options = []) {
     $options += ['message' => FALSE];
     $updates = 0;
+    $cache_tags = [];
 
     $entities = $this->entityTypeManager->getStorage($this->getEntityTypeId())->loadMultiple($ids);
     foreach ($entities as $entity) {
@@ -292,9 +301,13 @@ class EntityAliasTypeBase extends PluginBase implements AliasTypeInterface, Alia
         $result = $this->pathautoGenerator->updateEntityAlias($translated_entity, 'bulkupdate', $options);
         if ($result) {
           $updates++;
+          $cache_tags = array_merge($cache_tags, $translated_entity->getCacheTagsToInvalidate());
         }
       }
     }
+
+    // Invalidate the cache for the entities we updated the path aliases for.
+    Cache::invalidateTags(array_unique($cache_tags));
 
     if (!empty($options['message'])) {
       $this->messenger->addMessage($this->formatPlural(count($ids), 'Updated 1 %label URL alias.', 'Updated @count %label URL aliases.'), [

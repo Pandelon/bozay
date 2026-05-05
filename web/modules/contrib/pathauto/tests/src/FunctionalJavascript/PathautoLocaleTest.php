@@ -219,6 +219,76 @@ class PathautoLocaleTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests no false "alias already in use" error when translating content.
+   *
+   * When two nodes in different languages share the same alias (which is
+   * allowed), adding a translation of one can trigger a false "alias already
+   * in use" validation error. The translation form inherits the source alias,
+   * and the validator finds the other node's alias as a conflict (same alias +
+   * same target langcode + different path). PathautoWidget should skip
+   * validation when automatic aliasing is enabled, since pathauto will
+   * regenerate and uniquify the alias on save.
+   *
+   * @see https://www.drupal.org/i/3267989
+   */
+  public function testTranslationNoFalseAliasConflict() {
+    $permissions = [
+      'administer pathauto',
+      'administer url aliases',
+      'create url aliases',
+      'bypass node access',
+      'administer languages',
+      'translate any entity',
+      'administer content translation',
+      'create content translations',
+    ];
+    $admin_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($admin_user);
+
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    $this->enableArticleTranslation();
+    $this->createPattern('node', '/content/[node:title]');
+
+    // Create an English node programmatically. Pathauto generates alias
+    // /content/test-node for langcode 'en'.
+    $node_en = $this->drupalCreateNode([
+      'type' => 'article',
+      'title' => 'Test node',
+      'langcode' => 'en',
+    ]);
+    $this->assertEntityAlias($node_en, '/content/test-node', 'en');
+
+    // Create a French node with the same alias. Same alias, different
+    // language: this is allowed by the unique alias constraint.
+    $node_fr = $this->drupalCreateNode([
+      'type' => 'article',
+      'title' => 'Test node',
+      'langcode' => 'fr',
+      'path' => [
+        [
+          'alias' => '/content/test-node',
+          'pathauto' => FALSE,
+        ],
+      ],
+    ]);
+    $this->assertEntityAlias($node_fr, '/content/test-node', 'fr');
+
+    // Now add a French translation of the English node via the form. The
+    // translation form inherits the source alias /content/test-node. The
+    // validator would find the French node's alias as a conflict (same alias
+    // + langcode 'fr' + different path). With pathauto enabled, this should
+    // not trigger a validation error because pathauto will regenerate and
+    // uniquify the alias on save.
+    $this->drupalGet('node/' . $node_en->id() . '/translations/add/en/fr');
+    $this->submitForm([], 'Save (this translation)');
+    $this->assertSession()->pageTextContains('Article Test node has been updated.');
+    $this->assertSession()->pageTextNotContains('is already in use in this language');
+
+    // Verify pathauto generated a uniquified alias for the translation.
+    $this->assertEntityAlias($node_en, '/content/test-node-0', 'fr');
+  }
+
+  /**
    * Enables content translation on articles.
    */
   protected function enableArticleTranslation(): void {
