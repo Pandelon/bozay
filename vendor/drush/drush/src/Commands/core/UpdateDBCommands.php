@@ -334,7 +334,7 @@ final class UpdateDBCommands extends DrushCommands
             // Record this function in the list of updates that were aborted.
             $context['results']['#abort'][] = $function;
             Drush::logger()->error("Update failed: $function");
-        } elseif ($context['finished'] == 1 && empty($ret['#abort'])) {
+        } elseif ($context['finished'] == 1) {
             $context['message'] = "Update completed: $function";
         }
     }
@@ -558,12 +558,12 @@ final class UpdateDBCommands extends DrushCommands
                 $return = false;
             }
             foreach ($requirements as $requirement) {
-                if (isset($requirement['severity']) && $requirement['severity'] != REQUIREMENT_OK) {
+                if (isset($requirement['severity']) && drush_drupal_requirement_severity_int($requirement['severity']) !== REQUIREMENT_OK) {
                     $message = isset($requirement['description']) ? DrupalUtil::drushRender($requirement['description']) : '';
                     if (isset($requirement['value']) && $requirement['value']) {
                         $message .= ' (Currently using ' . $requirement['title'] . ' ' . DrupalUtil::drushRender($requirement['value']) . ')';
                     }
-                    $log_level = $requirement['severity'] === REQUIREMENT_ERROR ? LogLevel::ERROR : LogLevel::WARNING;
+                    $log_level = drush_drupal_requirement_severity_int($requirement['severity']) === REQUIREMENT_ERROR ? LogLevel::ERROR : LogLevel::WARNING;
                     $this->logger()->log($log_level, $message);
                 }
             }

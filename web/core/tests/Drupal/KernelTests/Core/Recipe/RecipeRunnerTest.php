@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Utility\Crypt;
 use Drupal\config_test\Entity\ConfigTest;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipePreExistingConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
@@ -27,6 +30,21 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class RecipeRunnerTest extends KernelTestBase {
 
   use RecipeTestTrait;
+
+  /**
+   * The value of RecipeRunner::isApplying() during hook_modules_installed().
+   *
+   * @see ::modulesInstalled()
+   */
+  private ?bool $isApplyingDuringModulesInstalled = NULL;
+
+  /**
+   * Implements hook_modules_installed().
+   */
+  #[Hook('modules_installed')]
+  public function modulesInstalled(array $modules, bool $is_syncing): void {
+    $this->isApplyingDuringModulesInstalled = RecipeRunner::isApplying();
+  }
 
   /**
    * Tests modules installed after processing a recipe.
@@ -297,7 +315,7 @@ config:
         label: 'Created by recipe'
 YAML;
     $recipe = $this->createRecipe($recipe_data);
-    $this->expectDeprecation('The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.');
+    $this->expectUserDeprecationMessage('The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.');
     RecipeRunner::processRecipe($recipe);
   }
 
@@ -323,17 +341,43 @@ YAML;
     $this->assertSame('Another test content type', NodeType::load('another_test')?->label());
 
     $operations = RecipeRunner::toBatchOperations($recipe);
+    $this->assertSame('triggerEvent', $operations[2][0][1]);
+    $this->assertSame('Install node with config', $operations[2][1][0]->name);
+    $this->assertStringEndsWith('core/tests/fixtures/recipes/install_node_with_config', $operations[2][1][0]->path);
+
+    $this->assertSame('triggerEvent', $operations[5][0][1]);
+    $this->assertSame('Recipe include', $operations[5][1][0]->name);
+    $this->assertStringEndsWith('core/tests/fixtures/recipes/recipe_include', $operations[5][1][0]->path);
+
     $this->assertSame('triggerEvent', $operations[7][0][1]);
-    $this->assertSame('Install node with config', $operations[7][1][0]->name);
-    $this->assertStringEndsWith('core/tests/fixtures/recipes/install_node_with_config', $operations[7][1][0]->path);
+    $this->assertSame('Recipe include', $operations[7][1][0]->name);
+    $this->assertSame($this->siteDirectory . '/recipes/recipe_include', $operations[7][1][0]->path);
+  }
 
-    $this->assertSame('triggerEvent', $operations[10][0][1]);
-    $this->assertSame('Recipe include', $operations[10][1][0]->name);
-    $this->assertStringEndsWith('core/tests/fixtures/recipes/recipe_include', $operations[10][1][0]->path);
+  /**
+   * Tests the isApplying flag while a recipe is applied.
+   */
+  public function testIsApplying(): void {
+    $this->assertFalse(RecipeRunner::isApplying());
+    $this->assertNull($this->isApplyingDuringModulesInstalled);
 
-    $this->assertSame('triggerEvent', $operations[12][0][1]);
-    $this->assertSame('Recipe include', $operations[12][1][0]->name);
-    $this->assertSame($this->siteDirectory . '/recipes/recipe_include', $operations[12][1][0]->path);
+    $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/install_two_modules');
+    RecipeRunner::processRecipe($recipe);
+
+    $this->assertTrue($this->isApplyingDuringModulesInstalled, 'RecipeRunner::isApplying() returned TRUE during hook_modules_installed()');
+    $this->assertFalse(RecipeRunner::isApplying());
+  }
+
+  /**
+   * Tests that module config installed by a recipe has a default config hash.
+   */
+  public function testModuleConfigHasDefaultConfigHash(): void {
+    $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/install_two_modules');
+    RecipeRunner::processRecipe($recipe);
+
+    $data = $this->container->get('config.storage')->read('node.settings');
+    $module_data = Yaml::decode(file_get_contents('core/modules/node/config/install/node.settings.yml'));
+    $this->assertSame(Crypt::hashBase64(serialize($module_data)), $data['_core']['default_config_hash']);
   }
 
 }

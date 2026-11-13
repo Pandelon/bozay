@@ -194,7 +194,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $uri, $response);
     $this->assertSame(['GET'], $response->getHeader('Allow'));
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 403 when unauthorized.
     $response = $this->fileRequest($uri, $this->testFileData);
@@ -273,7 +273,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $uri, $response);
     $this->assertSame(['GET'], $response->getHeader('Allow'));
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 403 when unauthorized.
     $response = $this->fileRequest($uri, $this->testFileData);
@@ -296,6 +296,8 @@ class FileUploadTest extends ResourceTestBase {
       FALSE,
       ['4xx-response', 'http_response'],
       ['url.query_args', 'url.site', 'user.permissions'],
+      NULL,
+      'UNCACHEABLE (403)',
     );
 
     $this->setUpAuthorization('GET');
@@ -411,7 +413,7 @@ class FileUploadTest extends ResourceTestBase {
   public function testPostFileUploadDuplicateFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -452,7 +454,7 @@ class FileUploadTest extends ResourceTestBase {
   public function testFileUploadStrippedFilePath(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -499,7 +501,7 @@ class FileUploadTest extends ResourceTestBase {
   public function testInvalidFileUploads(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
     $this->testFileUploadInvalidFileType();
     $this->testPostFileUploadInvalidHeaders();
     $this->testFileUploadLargerFileSize();
@@ -512,7 +514,7 @@ class FileUploadTest extends ResourceTestBase {
   public function testFileUploadUnicodeFilename(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -531,7 +533,7 @@ class FileUploadTest extends ResourceTestBase {
   public function testFileUploadZeroByteFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -698,11 +700,57 @@ class FileUploadTest extends ResourceTestBase {
   }
 
   /**
+   * Tests using the image upload POST route with a malicious image.
+   */
+  public function testImageUploadMaliciousContent(): void {
+    $this->container->get('module_installer')->install(['image']);
+
+    \Drupal::service('router.builder')->rebuild();
+    $this->setUpAuthorization('POST');
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
+
+    // Add a file field.
+    $imageStorage = FieldStorageConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_rest_image_test',
+      'type' => 'image',
+      'settings' => [
+        'uri_scheme' => 'public',
+      ],
+    ])
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $imageStorage->save();
+
+    $imageField = FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_rest_image_test',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'file_directory' => 'field_rest_image_test',
+        'file_extensions' => '',
+        'max_filesize' => '',
+      ],
+    ])
+      ->setLabel('Test image field')
+      ->setTranslatable(FALSE);
+    $imageField->save();
+
+    $uri = Url::fromUri('base:/jsonapi/entity_test/entity_test/field_rest_image_test');
+
+    $php_string = '<?php print "Drupal"; ?>';
+
+    // Test using a masked exploit file.
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example.png"']);
+    $this->assertSame(422, $response->getStatusCode());
+    $this->assertFileDoesNotExist('public://field_rest_image_test/example.png');
+  }
+
+  /**
    * Tests using the file upload POST route no configuration.
    */
   public function testFileUploadNoConfiguration(): void {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 

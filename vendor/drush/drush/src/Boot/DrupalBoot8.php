@@ -12,7 +12,6 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drush\Config\ConfigLocator;
 use Drush\Drupal\DrushLoggerServiceProvider;
-use Drush\Drupal\Migrate\MigrateRunnerServiceProvider;
 use Drush\Drush;
 use Drush\Event\ConsoleDefinitionsEvent;
 use Drush\Runtime\LegacyServiceFinder;
@@ -107,6 +106,11 @@ class DrupalBoot8 extends DrupalBoot
         ] + $_SERVER;
         $request = Request::create($uri, 'GET', [], [], [], $server);
         $request->overrideGlobals();
+
+        // Remove HTTP_ACCEPT, as things such as the Symfony var-dumper will
+        // incorrectly sniff that we're in a browser request.
+        unset($_SERVER['HTTP_ACCEPT']);
+
         $this->setRequest($request);
         return true;
     }
@@ -176,9 +180,6 @@ class DrupalBoot8 extends DrupalBoot
     {
         // Coax \Drupal\Core\DrupalKernel::discoverServiceProviders to add our logger.
         $GLOBALS['conf']['container_service_providers'][] = DrushLoggerServiceProvider::class;
-        // Implement a hook in behalf of 'system' module until #2952291 lands.
-        // @see https://www.drupal.org/project/drupal/issues/2952291
-        $GLOBALS['conf']['container_service_providers'][] = MigrateRunnerServiceProvider::class;
 
         // Default to the standard kernel.
         $kernel = Kernels::DRUPAL;
@@ -250,7 +251,10 @@ class DrupalBoot8 extends DrupalBoot
             $commandsInThisModule = $this->serviceManager->discoverModuleCommands([$path], "\\Drupal\\" . $moduleId . "\\Drush");
             // TODO: Maybe $bootstrapCommandClasses could use a better name.
             // These are commandhandlers that have static create factory methods.
-            $bootstrapCommandClasses = array_merge($bootstrapCommandClasses, $commandsInThisModule);
+            // array_unique() prevents classes already found pre-bootstrap by
+            // ServiceManager::discoverPsr4Commands() from being instantiated a
+            // second time when their namespace is a Composer PSR-4 prefix.
+            $bootstrapCommandClasses = array_unique(array_merge($bootstrapCommandClasses, $commandsInThisModule));
             // TODO: Support PSR-4 command info alterers, like bootstrapCommandClasses?
             $commandInfoAlterersInThisModule = $this->serviceManager->discoverModuleCommandInfoAlterers([$path], "\\Drupal\\" . $moduleId . "\\Drush");
             $commandInfoAlterers = array_merge($commandInfoAlterers, $commandInfoAlterersInThisModule);

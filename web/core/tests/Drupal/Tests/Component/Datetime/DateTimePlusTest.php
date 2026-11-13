@@ -631,6 +631,18 @@ class DateTimePlusTest extends TestCase {
       ],
       'Missing day' => [['year' => 2059, 'month' => 1, 'second' => 1], FALSE],
       'Zero day' => [['year' => 2059, 'month' => 1, 'day' => 0], FALSE],
+      'Non-numeric year' => [
+        ['year' => 'invalid', 'month' => 11, 'day' => 2],
+        FALSE,
+      ],
+      'Non-numeric month' => [
+        ['year' => 2025, 'month' => 'invalid', 'day' => 2],
+        FALSE,
+      ],
+      'Non-numeric day' => [
+        ['year' => 2025, 'month' => 11, 'day' => 'invalid'],
+        FALSE,
+      ],
     ];
   }
 
@@ -1101,6 +1113,15 @@ class DateTimePlusTest extends TestCase {
     $this->assertEquals('Europe/Berlin', $datetime->getTimezone()->getName());
     $this->assertEquals(1500000000, $date_time_plus->getTimestamp());
     $this->assertEquals('America/New_York', $date_time_plus->getTimezone()->getName());
+  }
+
+  /**
+   * Tests unserializing a payload whose $dateTimeObject is not a date.
+   */
+  public function testUnserializeWithInvalidDateTimeObject(): void {
+    $serialized = "O:38:\"Drupal\\Component\\Datetime\\DateTimePlus\":3:{s:11:\"\0*\0langcode\";N;s:9:\"\0*\0errors\";a:0:{}s:17:\"\0*\0dateTimeObject\";s:8:\"not-date\";}";
+    $this->expectException(\TypeError::class);
+    unserialize($serialized);
   }
 
 }

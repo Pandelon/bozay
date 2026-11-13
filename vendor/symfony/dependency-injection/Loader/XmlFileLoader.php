@@ -385,7 +385,7 @@ class XmlFileLoader extends FileLoader
         }
 
         // deep clone, to avoid multiple process of the same instance in the passes
-        $bindings = array_merge(unserialize(serialize($defaults->getBindings())), $bindings);
+        $bindings = array_merge(unserialize(serialize($defaults->getBindings()), ['allowed_classes' => true]), $bindings);
 
         if ($bindings) {
             $definition->setBindings($bindings);
@@ -509,7 +509,9 @@ class XmlFileLoader extends FileLoader
     {
         $definitions = [];
         $count = 0;
-        $suffix = '~'.ContainerBuilder::hash($file);
+        $projectDir = $this->container->hasParameter('kernel.project_dir') ? $this->container->getParameter('kernel.project_dir') : null;
+        // hashing the path relative to the project keeps the ids independent from where the project is
+        $suffix = '~'.ContainerBuilder::hash(\is_string($projectDir) && str_starts_with($file, $projectDir) ? substr($file, \strlen($projectDir)) : $file);
 
         $xpath = new \DOMXPath($xml);
         $xpath->registerNamespace('container', self::NS);
@@ -757,23 +759,24 @@ class XmlFileLoader extends FileLoader
         $tmpfiles = [];
         $imports = '';
         foreach ($schemaLocations as $namespace => $location) {
-            $parts = explode('/', $location);
-            $locationstart = 'file:///';
             if (0 === stripos($location, 'phar://')) {
-                $tmpfile = tempnam(sys_get_temp_dir(), 'symfony');
-                if ($tmpfile) {
+                if ($tmpfile = tempnam(sys_get_temp_dir(), 'symfony')) {
                     copy($location, $tmpfile);
                     $tmpfiles[] = $tmpfile;
-                    $parts = explode('/', str_replace('\\', '/', $tmpfile));
+                    $location = self::getFileUrl($tmpfile);
                 } else {
+                    $parts = explode('/', '\\' === \DIRECTORY_SEPARATOR ? str_replace('\\', '/', $location) : $location);
                     array_shift($parts);
-                    $locationstart = 'phar:///';
+                    $drive = '\\' === \DIRECTORY_SEPARATOR ? array_shift($parts).'/' : '';
+                    $location = 'phar:///'.$drive.implode('/', array_map('rawurlencode', $parts));
                 }
             } elseif ('\\' === \DIRECTORY_SEPARATOR && str_starts_with($location, '\\\\')) {
-                $locationstart = '';
+                $parts = explode('/', $location);
+                $drive = array_shift($parts).'/';
+                $location = $drive.implode('/', array_map('rawurlencode', $parts));
+            } else {
+                $location = self::getFileUrl($location);
             }
-            $drive = '\\' === \DIRECTORY_SEPARATOR ? array_shift($parts).'/' : '';
-            $location = $locationstart.$drive.implode('/', array_map('rawurlencode', $parts));
 
             $imports .= \sprintf('  <xsd:import namespace="%s" schemaLocation="%s" />'."\n", $namespace, $location);
         }
@@ -813,12 +816,15 @@ class XmlFileLoader extends FileLoader
             $dom->loadXML('<?xml version="1.0"?><test/>');
 
             $tmpfile = tempnam(sys_get_temp_dir(), 'symfony');
-            register_shutdown_function(static function () use ($tmpfile) {
-                @unlink($tmpfile);
+            $pid = getmypid();
+            register_shutdown_function(static function () use ($tmpfile, $pid) {
+                if (getmypid() === $pid) {
+                    @unlink($tmpfile);
+                }
             });
             $schema = '<?xml version="1.0" encoding="utf-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:include schemaLocation="file:///'.rawurlencode(str_replace('\\', '/', $tmpfile)).'" />
+  <xsd:include schemaLocation="'.self::getFileUrl($tmpfile).'" />
 </xsd:schema>';
             file_put_contents($tmpfile, '<?xml version="1.0" encoding="utf-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -828,6 +834,19 @@ class XmlFileLoader extends FileLoader
         }
 
         return !@$dom->schemaValidateSource($schema);
+    }
+
+    private static function getFileUrl(string $path): string
+    {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $parts = explode('/', str_replace('\\', '/', $path));
+            $drive = array_shift($parts).'/';
+        } else {
+            $parts = explode('/', $path);
+            $drive = '';
+        }
+
+        return 'file:///'.$drive.implode('/', array_map('rawurlencode', $parts));
     }
 
     private function validateAlias(\DOMElement $alias, string $file): void
