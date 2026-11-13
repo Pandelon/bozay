@@ -13,6 +13,6 @@
         "source": "https://cgit.drupalcode.org/simple_timeline"
     },
     "require": {
-        "drupal/core": "^10.4 || ^11"
+        "drupal/core": "^10.4 || ^11 || ^12"
     }
 }

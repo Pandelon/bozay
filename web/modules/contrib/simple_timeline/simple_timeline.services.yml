@@ -1,0 +1,4 @@
+services:
+  Drupal\simple_timeline\Hook\SimpleTimelineHooks:
+    class: Drupal\simple_timeline\Hook\SimpleTimelineHooks
+    autowire: true

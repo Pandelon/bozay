@@ -9,7 +9,6 @@ For a full description of the module, visit the
 Submit bug reports and feature suggestions, or track changes in the
 [issue queue](https://www.drupal.org/project/issues/simple_timeline).
 
-
 ## Table of contents
 
 - Requirements
@@ -18,18 +17,15 @@ Submit bug reports and feature suggestions, or track changes in the
 - Customization
 - Maintainers
 
-
 ## Requirements
 
 This module requires no modules outside of Drupal core.
-
 
 ## Installation
 
 Install as you would normally install a contributed Drupal module. For further
 information, see
 [Installing Drupal Modules](https://www.drupal.org/docs/extending-drupal/installing-drupal-modules).
-
 
 ## Configuration
 
@@ -51,17 +47,26 @@ rules in your theme.
 For example.
 
 The timeline color.
-     ul.timeline-list:after {
+
+    ul.timeline-list:after {
       background-color: #555555;
-     }
+    }
 
 And the marker color and form.
-     ul.timeline-list li.timeline-item .timeline-item-wrapper span.timeline-marker {
-        background: #fff;
-         border: 3px solid #555555;
-         border-radius: 0;
-     }
 
+    ul.timeline-list li.timeline-item .timeline-item-wrapper span.timeline-marker {
+      background: #fff;
+      border: 3px solid #555555;
+      border-radius: 0;
+    }
+
+## Alternatives
+
+- [Timeline block](https://www.drupal.org/project/timeline_block)
+
+  Timeline Block lets you enter timelines from your drupal block configuration
+  area. It is a customizable drupal timeline module. Using this timelines module
+  lets you easily add timelines on your drupal website.
 
 ## Maintainers
 
