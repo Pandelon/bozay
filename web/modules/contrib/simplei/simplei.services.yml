@@ -1,0 +1,6 @@
+services:
+  Drupal\simplei\IndicatorParser:
+    class: Drupal\simplei\IndicatorParser
+  Drupal\simplei\Hook\SimpleiHooks:
+    class: Drupal\simplei\Hook\SimpleiHooks
+    autowire: true

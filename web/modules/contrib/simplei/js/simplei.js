@@ -21,7 +21,8 @@
           toolbarAdmin.style.color = drupalSettings.simplei.color;
           toolbarAdmin.style.backgroundColor =
             drupalSettings.simplei.background;
-          toolbarAdmin.style.backgroundImage = 'linear-gradient(rgba(0, 0, 0, 0.15))';
+          toolbarAdmin.style.backgroundImage =
+            'linear-gradient(rgba(0, 0, 0, 0.15))';
         }
       }
 

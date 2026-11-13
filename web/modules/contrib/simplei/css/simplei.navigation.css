@@ -1,0 +1,9 @@
+.simplei-indicator {
+  display: inline-block;
+  padding: var(--admin-toolbar-space-4, 4px) var(--admin-toolbar-space-8, 8px);
+  color: var(--simplei-fg, #fff);
+  border-radius: var(--admin-toolbar-space-4, 4px);
+  background-color: var(--simplei-bg, #999);
+  font-weight: 700;
+  line-height: 1;
+}

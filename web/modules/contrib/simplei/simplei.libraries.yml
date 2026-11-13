@@ -1,6 +1,11 @@
 simplei:
   js:
-    simplei.js: {}
+    js/simplei.js: {}
   dependencies:
     - core/drupal
     - core/once
+
+navigation:
+  css:
+    component:
+      css/simplei.navigation.css: {}
