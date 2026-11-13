@@ -3,7 +3,7 @@
         'name' => 'drupal/recommended-project',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4c65620ed3d3e3f744ac2533f16dd81e1efc165b',
+        'reference' => '829097b3e484c4a5676f39bdac54b6327dd0ed00',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -454,7 +454,7 @@
         'drupal/pathauto' => array(
             'pretty_version' => 'dev-1.x',
             'version' => 'dev-1.x',
-            'reference' => '165cff91d4ce55b8bad5bca523d0e3f7f025762c',
+            'reference' => '52aa4a9b4d33cd9a2d219238b398a990de2e9a30',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../web/modules/contrib/pathauto',
             'aliases' => array(
@@ -465,7 +465,7 @@
         'drupal/recommended-project' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4c65620ed3d3e3f744ac2533f16dd81e1efc165b',
+            'reference' => '829097b3e484c4a5676f39bdac54b6327dd0ed00',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
