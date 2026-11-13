@@ -1,0 +1,37 @@
+# Schema for the simple_timeline plugin.
+views.style.simple_timeline:
+  type: views_style
+  label: 'Simple Timeline'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    wrapper_class:
+      type: string
+      label: 'Wrapper class'
+      constraints:
+        Regex:
+          pattern: '/^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/'
+          message: "The %value is not a valid class string."
+    class:
+      type: string
+      label: 'List class'
+      constraints:
+        Regex:
+          pattern: '/^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/'
+          message: "The %value is not a valid class string."
+    position_items:
+      type: string
+      label: 'Position items'
+      constraints:
+        Choice:
+          - alternate
+          - left
+          - right
+    position_marker:
+      type: string
+      label: 'Position marker'
+      constraints:
+        Choice:
+          - marker-top
+          - marker-center
+          - marker-bottom
