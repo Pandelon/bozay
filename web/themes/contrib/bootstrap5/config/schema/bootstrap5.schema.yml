@@ -1,5 +1,5 @@
 bootstrap5.settings:
-  type: config_object
+  type: theme_settings
   label: 'Bootstrap 5 theme settings'
   mapping:
     b5_body_schema:

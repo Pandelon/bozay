@@ -1,0 +1,60 @@
+name-template: 'v$NEXT_MAJOR_VERSION'
+tag-template: 'v$NEXT_MAJOR_VERSION'
+prerelease: true
+exclude-labels:
+  - 'skip-changelog'
+categories:
+  - title: '❗ Breaking Changes'
+    labels:
+      - 'breaking-change'
+  - title: '🚀 Highlights'
+    labels:
+      - 'release-highlight'
+  - title: '🚀 Features'
+    labels:
+      - 'new-feature'
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: '⚡ Performance improvements'
+    labels:
+      - 'performance'
+  - title: '🎨 CSS'
+    labels:
+      - 'css'
+  - title: '☕️ JavaScript'
+    labels:
+      - 'js'
+  - title: '📖 Docs'
+    labels:
+      - 'docs'
+  - title: '🛠 Examples'
+    labels:
+      - 'examples'
+  - title: '🌎 Accessibility'
+    labels:
+      - 'accessibility'
+  - title: '🔧 Utility API'
+    labels:
+      - 'utility-api'
+      - 'utilities'
+  - title: '🏭 Tests'
+    labels:
+      - 'tests'
+  - title: '🧰 Misc'
+    labels:
+      - 'build'
+      - 'meta'
+      - 'chore'
+      - 'ci'
+  - title: '📦 Dependencies'
+    labels:
+      - 'dependencies'
+change-template: '- #$NUMBER: $TITLE'
+template: |
+  ## Changes
+  $CHANGES

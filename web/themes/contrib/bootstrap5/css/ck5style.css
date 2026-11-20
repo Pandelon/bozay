@@ -178,8 +178,8 @@
 
 .ck-content {
   /*!
-   * Bootstrap  v5.3.8 (https://getbootstrap.com/)
-   * Copyright 2011-2025 The Bootstrap Authors
+   * Bootstrap  v5.3.9 (https://getbootstrap.com/)
+   * Copyright 2011-2026 The Bootstrap Authors
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
    */
   /* rtl:raw:
@@ -668,7 +668,7 @@ a > .ck-content code {
 }
 .ck-content ::-webkit-datetime-edit-fields-wrapper,
 .ck-content ::-webkit-datetime-edit-text,
-.ck-content ::-webkit-datetime-edit-minute,
+.ck-content ::-webkit-datetime-edit-minute-field,
 .ck-content ::-webkit-datetime-edit-hour-field,
 .ck-content ::-webkit-datetime-edit-day-field,
 .ck-content ::-webkit-datetime-edit-month-field,
@@ -5482,13 +5482,20 @@ a > .ck-content code {
 }
 @media (min-width: 992px) {
   .ck-content .modal-lg,
-  .ck-content .modal-xl {
+  .ck-content .modal-xl,
+  .ck-content .modal-xxl {
     --bs-modal-width: 800px;
   }
 }
 @media (min-width: 1200px) {
-  .ck-content .modal-xl {
+  .ck-content .modal-xl,
+  .ck-content .modal-xxl {
     --bs-modal-width: 1140px;
+  }
+}
+@media (min-width: 1400px) {
+  .ck-content .modal-xxl {
+    --bs-modal-width: 1320px;
   }
 }
 .ck-content .modal-fullscreen {
@@ -6610,6 +6617,11 @@ a > .ck-content code {
 .ck-content .placeholder-glow .placeholder {
   animation: placeholder-glow 2s ease-in-out infinite;
 }
+@media (prefers-reduced-motion: reduce) {
+  .ck-content .placeholder-glow .placeholder {
+    animation: none;
+  }
+}
 @keyframes placeholder-glow {
   50% {
     opacity: 0.2;
@@ -6619,6 +6631,11 @@ a > .ck-content code {
   mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%);
   mask-size: 200% 100%;
   animation: placeholder-wave 2s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ck-content .placeholder-wave {
+    animation: none;
+  }
 }
 @keyframes placeholder-wave {
   100% {
